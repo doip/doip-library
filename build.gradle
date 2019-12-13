@@ -1,0 +1,18 @@
+apply plugin: 'java-library'
+apply plugin: 'maven'
+apply plugin: 'eclipse'
+
+group = 'com.github.doip'
+version = '1.0.0'
+
+repositories {
+	jcenter()
+	maven { url 'https://jitpack.io' }
+}
+
+dependencies {
+	implementation 'com.github.doip:doip-logging:1.1.2'
+	testImplementation 'com.github.doip:doip-junit:1.0.3'
+	testImplementation 'junit:junit:4.12'
+}
+
