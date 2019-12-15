@@ -325,11 +325,6 @@ public class DoipTcpStreamBuffer extends StreamBuffer {
 		}
 	}
 
-	/*
-	 * private void onHeaderOutOfMemory() { Iterator<DoipStreamBufferListener> iter
-	 * = listeners.iterator(); while (iter.hasNext()) { DoipStreamBufferListener
-	 * listener = iter.next(); listener.onHeaderOutOfMemory(); } }
-	 */
 
 	/**
 	 * This function will process the existing data in the buffer.

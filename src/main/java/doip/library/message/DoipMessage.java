@@ -1,6 +1,6 @@
 package doip.library.message;
 
-import org.apache.logging.log4j.Level;
+import doip.logging.Level;
 
 /**
  * Base class for all DoIP Messages

@@ -16,7 +16,6 @@ public interface DoipTcpStreamBufferListener {
 	 * maximum message length.
 	 */
 	public void onHeaderMessageTooLarge();
-	//public void onHeaderOutOfMemory();
 	
 	/**
 	 * Will be called if the payload type in the header is unknown.
@@ -45,5 +44,4 @@ public interface DoipTcpStreamBufferListener {
 	 */
 	public void onShredderCompleted(long payloadLength);
 	
-	//public void onShredderCompleted(long payloadLength);
 }

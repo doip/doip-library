@@ -1,8 +1,8 @@
 package doip.library.message;
 
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import doip.logging.Level;
+import doip.logging.LogManager;
+import doip.logging.Logger;
 
 public class DoipTcpRoutingActivationResponse extends DoipTcpMessage {
 

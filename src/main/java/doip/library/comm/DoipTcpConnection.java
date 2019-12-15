@@ -6,8 +6,8 @@ import java.net.Socket;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import doip.logging.LogManager;
+import doip.logging.Logger;
 
 import doip.library.message.DoipMessage;
 import doip.library.message.DoipTcpAliveCheckRequest;
