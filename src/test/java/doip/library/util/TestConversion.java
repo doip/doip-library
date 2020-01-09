@@ -2,9 +2,9 @@ package doip.library.util;
 
 import static doip.junit.Assert.*;
 
-import org.junit.Assert;
 import org.junit.Test;
 
+import doip.junit.Assert;
 import doip.library.util.Conversion;
 
 public class TestConversion {

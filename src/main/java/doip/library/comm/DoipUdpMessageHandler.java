@@ -48,10 +48,6 @@ public class DoipUdpMessageHandler implements UdpReceiverListener {
 
 	private LookupTable lookupTable = null;
 
-	@SuppressWarnings("unused")
-	private DoipUdpMessageHandler() {
-	}
-
 	public DoipUdpMessageHandler(String udpReceiverThreadName, LookupTable lookupTable) {
 		this.udpReceiverThreadName = udpReceiverThreadName;
 		this.lookupTable = lookupTable;
