@@ -1,4 +1,4 @@
-package doip.library.util;
+package doip.library.timer;
 
 public class NanoTimer {
 	

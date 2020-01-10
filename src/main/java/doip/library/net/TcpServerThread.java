@@ -9,6 +9,10 @@ import doip.logging.Logger;
 
 import doip.library.util.Helper;
 
+/**
+ * Implements a TCP Server as a thread which is listening for 
+ * incoming connections.
+ */
 public class TcpServerThread extends TcpServer implements Runnable {
 
 	private static Logger logger = LogManager.getLogger(TcpServerThread.class);
@@ -18,10 +22,6 @@ public class TcpServerThread extends TcpServer implements Runnable {
 	private String threadName = null;
 
 	private volatile ServerSocket socket = null;
-
-	@SuppressWarnings("unused")
-	private TcpServerThread() {
-	}
 
 	public TcpServerThread(String threadName) {
 		this.threadName = threadName;

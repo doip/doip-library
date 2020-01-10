@@ -11,6 +11,9 @@ import doip.logging.Logger;
 import doip.library.util.Conversion;
 import doip.library.util.Helper;
 
+/**
+ * Implements a thread that listens on a UDP socket for new data which has been received. 
+ */
 public class UdpReceiverThread extends UdpReceiver implements Runnable {
 
 	private Logger logger = LogManager.getLogger(UdpReceiverThread.class);
@@ -21,14 +24,15 @@ public class UdpReceiverThread extends UdpReceiver implements Runnable {
 
 	private volatile DatagramSocket socket = null;
 
-	@SuppressWarnings("unused")
-	private UdpReceiverThread() {
-	}
-
+	/**
+	 * Constructor with parameter threadName
+	 * @param threadName The name of the thread. It will be used for logging.
+	 */
 	public UdpReceiverThread(String threadName) {
 		this.threadName = threadName;
 	}
 
+	@Override
 	public void start(DatagramSocket socket) {
 		if (logger.isTraceEnabled()) {
 			this.logger.trace(">>> void start(DatagramSocket socket)");
@@ -41,11 +45,14 @@ public class UdpReceiverThread extends UdpReceiver implements Runnable {
 		}
 	}
 
+	@Override
 	public void stop() {
 		if (logger.isTraceEnabled()) {
 			this.logger.trace(">>> void stop()");
 		}
+		
 		this.socket.close();
+		
 		try {
 			this.thread.join();
 		} catch (InterruptedException e) {
@@ -53,12 +60,18 @@ public class UdpReceiverThread extends UdpReceiver implements Runnable {
 				logger.error(Helper.getExceptionAsString(e));
 			}
 		}
+		
 		this.thread = null;
+	
 		if (logger.isTraceEnabled()) {
 			this.logger.trace("<<< void stop()");
 		}
 	}
 
+	/**
+	 * Returns true when the thread is alive
+	 * @return
+	 */
 	public boolean isAlive() {
 		this.logger.trace(">>> boolean isAlive()");
 		if (this.thread == null)

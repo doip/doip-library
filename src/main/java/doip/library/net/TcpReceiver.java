@@ -8,6 +8,7 @@ import doip.logging.Logger;
 
 /**
  *  Implements functions to handle events from a TCP socket.
+ *  It is implemented as a typical publisher-subscriber pattern.
  *
  */
 public class TcpReceiver {
