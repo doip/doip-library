@@ -18,7 +18,7 @@ import java.util.LinkedList;
  */
 public class LookupTable {
 
-	LinkedList<LookupEntry> patterns = new LinkedList<LookupEntry>();
+	LinkedList<LookupEntry> lookupEntries = new LinkedList<LookupEntry>();
 
 	/**
 	 * Loads the table from a file. ATTENTION: The purpose of this table is handle
@@ -30,13 +30,13 @@ public class LookupTable {
 	 * @param filename
 	 * @throws IOException
 	 */
-	public void appendPatterns(String filename) throws IOException {
+	public void appendLookupEntriesFromFile(String filename) throws IOException {
 		BufferedReader br = new BufferedReader(new FileReader(filename));
 		String line = br.readLine();
 		while (line != null) {
 			if (!line.startsWith("#")) {
 				if (line.contains(":")) {
-					patterns.add(new LookupEntry(line));
+					lookupEntries.add(new LookupEntry(line));
 				}
 			}
 			line = br.readLine();
@@ -44,24 +44,42 @@ public class LookupTable {
 		br.close();
 	}
 
-	public void appendPatterns(String path, String[] files) throws IOException {
+	public void appendLookupEntriesFromFiles(String path, String[] files) throws IOException {
 		for (int i = 0; i < files.length; i++) {
 			String fileWithPath = path + files[i];
-			this.appendPatterns(fileWithPath);
+			this.appendLookupEntriesFromFile(fileWithPath);
 		}
 	}
 
+	/**
+	 * Searches in all lookup entries where the given text matches to the regular
+	 * expression in the lookup entry. If one entry matches then it will return the
+	 * result of the lookup entry. If no entry would match it returns null.
+	 * 
+	 * @param text Text which needs to match the regular expression
+	 * @return Returns the result if a entry could be found where the text matches
+	 *         the regular expression. If no entry will match it returns null.
+	 */
 	public String findResult(String text) {
-		Iterator<LookupEntry> iter = patterns.iterator();
-		while (iter.hasNext()) {
-			LookupEntry pattern = iter.next();
-			if (text.matches(pattern.getRegex())) {
-				return pattern.getResult();
+		for (LookupEntry lookupEntry : lookupEntries) {
+			if (text.matches(lookupEntry.getRegex())) {
+				return lookupEntry.getResult();
 			}
 		}
+
 		return null;
 	}
 
+	/**
+	 * Simular to functon "String findResult(String text)", but here the parameter
+	 * and the return value is a byte array. The argument "bytes" will be first
+	 * converted to a hex string, then call findResult(String text), and if the
+	 * return value is not null it assumes that the return value is a hex string and
+	 * converts back the hex string to a byte array.
+	 * 
+	 * @param bytes
+	 * @return
+	 */
 	public byte[] findResult(byte[] bytes) {
 		String text = Conversion.byteArrayToHexString(bytes);
 		String result = this.findResult(text);
