@@ -3,7 +3,7 @@ apply plugin: 'maven'
 apply plugin: 'eclipse'
 
 group = 'com.github.doip'
-version = '1.0.3'
+version = '1.0.4'
 
 repositories {
 	jcenter()
