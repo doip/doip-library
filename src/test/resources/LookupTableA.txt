@@ -1,0 +1,10 @@
+# Test Lookup Table A
+# It contains already some lines after this line with a set of white spaces. These shall be ignored.
+  
+  
+  		
+  10 01 : 50 01 00 32 01 E8
+  
+  10 03 : 50 03 00 32 01 E8
+  
+  # Last line of file

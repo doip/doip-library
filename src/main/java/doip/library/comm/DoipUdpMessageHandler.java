@@ -209,7 +209,7 @@ public class DoipUdpMessageHandler implements UdpReceiverListener {
 				logger.debug("Search request in UDP lookup table");
 			}
 			byte[] request = Arrays.copyOf(packet.getData(), packet.getLength());
-			response = lookupTable.findResult(request);
+			response = lookupTable.findResultAndApplyModifiers(request);
 		}
 
 		// Check if response had been found
