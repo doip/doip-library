@@ -61,24 +61,26 @@ public class Helper {
 	}
 
 	/**
-	 * Returns the exception as string. This includes also the stack trace
-	 * 
-	 * @param e The exception.
+	 * Returns an exception including its stack trace as string.
+	 * @param e The exception
 	 * @return The exception as string
 	 */
-	public static String getExceptionAsString(Exception e) {
-		String s = "";
+	public static String getExceptionAsString(Throwable e) {
+		StringBuilder s = new StringBuilder(4096);
 		String message = e.getMessage();
 		if (message != null) {
-			s += message;
+			s.append(message);
 		}
-		s += "\n";
-		s += e.getClass().getName() + "\n";
+		s.append("\n");
+		s.append(e.getClass().getName());
+		s.append("\n");
 		StackTraceElement[] elements = e.getStackTrace();
-		for (int i = 0; i < elements.length; i++) {
-			s += "\tat " + elements[i] + "\n";
+		for (StackTraceElement element : elements) {
+			s.append("    ");
+			s.append(element);
+			s.append("\n");
 		}
-		return s;
+		return s.toString();
 	}
 
 	public static MulticastSocket createUdpSocket(InetAddress localAddress, int localPort, InetAddress multicast)
