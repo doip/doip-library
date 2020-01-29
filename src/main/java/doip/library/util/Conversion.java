@@ -21,10 +21,15 @@ public class Conversion {
 	private final static char[] hexArray = "0123456789ABCDEF".toCharArray();
 
 	public static byte[] hexStringToByteArray(String s) {
-		s = s.replaceAll(" ", "");
 		s = s.replaceAll("0x" , "");
+		
+		// Following section can be optimized by using char[]
+		s = s.replaceAll(" ", "");
 		s = s.replaceAll(",", "");
+		s = s.replaceAll("\\.", "");
 		s = s.replaceAll(";", "");
+		//-----------------------------------
+		
 		int len = s.length();
 		byte[] data = new byte[len / 2];
 		for (int i = 0; i < len; i += 2) {
@@ -35,31 +40,48 @@ public class Conversion {
 	}
 
 	/**
-	 * Converts a byte array to an ascii string.
+	 * Converts a byte array to an hex string.
 	 * @param bytes The byte array which shall be converted
-	 * @return The ascii string
+	 * @return The hex string
 	 */
 	public static String byteArrayToHexString(byte[] bytes) {
-		char[] hexChars = new char[bytes.length * 2];
+		if (bytes.length == 0) return "";		
+		char[] hexChars = new char[bytes.length * 3 - 1];
 		for (int j = 0; j < bytes.length; j++) {
 			int v = bytes[j] & 0xFF;
-			hexChars[j * 2] = hexArray[v >>> 4];
-			hexChars[j * 2 + 1] = hexArray[v & 0x0F];
+			hexChars[j * 3] = hexArray[v >>> 4];
+			hexChars[j * 3 + 1] = hexArray[v & 0x0F];
+			if (j < bytes.length - 1) {
+				hexChars[j * 3 + 2] = ' ';
+			}
 		}
 		return new String(hexChars);
 	}
 	
+	/**
+	 * Converts a byte array to a hex string but it will
+	 * take only 'count' bytes. 
+	 * @param bytes The byte array which shall be converted
+	 * @param count Then maximum number of bytes which will be converted
+	 * @return The hex string
+	 */
 	public static String byteArrayToHexStringShort(byte[] bytes, int count) {
-		if (bytes.length <= count) {
+		if (bytes.length == 0) {
+			return "";
+		} else if (bytes.length <= count) {
 			return byteArrayToHexString(bytes);
 		} else {
-			char[] hexChars = new char[count * 2];
+			char[] hexChars = new char[count * 3 - 1];
 			for (int j = 0; j < count; j++) {
 				int v = bytes[j] & 0xFF;
-				hexChars[j * 2] = hexArray[v >>> 4];
-				hexChars[j * 2 + 1] = hexArray[v & 0x0F];
+				hexChars[j * 3] = hexArray[v >>> 4];
+				hexChars[j * 3 + 1] = hexArray[v & 0x0F];
+				if (j < count - 1) {
+					hexChars[j * 3 + 2] = ' ';
+				}
 			}
-			return new String(hexChars);		}
+			return new String(hexChars);		
+		}
 	}
 	
 	public static String byteArrayToHexStringShortDotted(byte[] bytes, int count) {
