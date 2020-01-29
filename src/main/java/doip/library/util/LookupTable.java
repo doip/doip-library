@@ -48,6 +48,14 @@ public class LookupTable {
 		br.close();
 	}
 
+	/**
+	 * Will add lookup entries from a list of files. The files
+	 * are all located relative to the given path. The function
+	 * will just concatenate the path and the filename. 
+	 * @param path Path where the files are located
+	 * @param files The files which shall be loaded
+	 * @throws IOException
+	 */
 	public void addLookupEntriesFromFiles(String path, String[] files) throws IOException {
 		for (int i = 0; i < files.length; i++) {
 			String fileWithPath = path + files[i];
@@ -65,6 +73,7 @@ public class LookupTable {
 	 *         the regular expression. If no entry will match it returns null.
 	 */
 	public String findResultAndApplyModifiers(String text) {
+		text = text.replaceAll(" ", "");
 		for (LookupEntry lookupEntry : lookupEntries) {
 			if (text.matches(lookupEntry.getRegex())) {
 				applyModifiers(lookupEntry.getModifiers());
@@ -96,6 +105,14 @@ public class LookupTable {
 		return Conversion.hexStringToByteArray(result);
 	}
 	
+	/**
+	 * It will iterate over all modifiers and search in the lookup
+	 * table if there is a entry where the regex in the table will
+	 * match the regex in the modifier. If so, the result in the
+	 * lookup table will be changed to the result in the modifier.
+	 * @param modifiers List of modifiers which shall be applied 
+	 * to the lookup table.
+	 */
 	public void applyModifiers(List<LookupEntry> modifiers) {
 		for (LookupEntry modifier : modifiers) {
 			for (LookupEntry entry : this.lookupEntries) {
@@ -106,6 +123,19 @@ public class LookupTable {
 		}
 	}
 	
+	/**
+	 * Resolves references from a hex string to another hex string. These 
+	 * references are in the response and are declared within two brackets '[' and ']'.
+	 * The response is referencing bytes from the request. for example the request is
+	 * "01 FF AB 07" and the response is "02 00 [1] AA BB" the interpration is that
+	 * the response is 5 bytes long and byte 3 shall have the value from byte with index 1 (index begins at 0) 
+	 * in the request.
+	 * So the final result is "02 00 FF AA BB"
+	 * @param request The request message as a hex string
+	 * @param response The response message as a hex string which might contain references to
+	 * bytes in the response by using brackets, for example "[1]".
+	 * @return The response hex string with resolved references.
+	 */
 	public String resolveReferences(String request, String response) {
 		logger.trace(">>> public String resolveReferences(String request, String response)");
 		logger.debug("request  = " + request);

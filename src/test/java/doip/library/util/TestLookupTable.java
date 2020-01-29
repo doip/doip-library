@@ -116,6 +116,7 @@ public class TestLookupTable {
 		
 		byte[] request = new byte[] { 0x36, 0x10, 0x01, 0x02, 0x03 };
 		byte[] response = table.findResultAndApplyModifiers(request);
+		Assert.assertNotNull(response);
 		byte[] expected = new byte[] { 0x76, 0x10 };
 		Assert.assertArrayEquals(expected, response);
 		
