@@ -23,7 +23,7 @@ public abstract class Timer {
 		}
 	}
 	
-	public abstract void start(long cycle);
+	public abstract void start(long cycleTime, int numberOfCycles);
 	
 	public abstract void stop();
 }
