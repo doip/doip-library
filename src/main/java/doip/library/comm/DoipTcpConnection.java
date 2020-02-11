@@ -220,16 +220,31 @@ public class DoipTcpConnection implements DoipTcpStreamBufferListener, TcpReceiv
 			logger.trace("<<< void onHeaderInvalidPayloadLength()");
 		}
 	}
+
+	@Override
+	public void onPayloadCompleted(byte[] header, int payloadType, byte[] payload) {
+		if (logger.isTraceEnabled()) {
+			logger.trace(">>> void onPayloadCompleted(int payloadType, byte[] data)");
+		}
+		
+		boolean ret = false;
+		ret = processDataByCustomHandler(header, payloadType, payload);
+		if (ret) {
+			return;
+		}
+		
+		processDataByStandardHandler(header, payloadType, payload);
+
+		if (logger.isTraceEnabled()) {
+			logger.trace("<<< void onPayloadCompleted(int payloadType, byte[] data)");
+		}
+	}
 	
-	public boolean processDataByFunction(byte[] header, int payloadType, byte[] payload) {
+	public boolean processDataByCustomHandler(byte[] header, int payloadType, byte[] payload) {
 		return false;
 	}
 
-	public boolean processDataByLookupTable(byte[] header, int payloadType, byte[] payload) {
-		return false;
-	}
-
-	public void processDataByMessageInterpretation(byte[] header, int payloadType, byte[] payload) {
+	public void processDataByStandardHandler(byte[] header, int payloadType, byte[] payload) {
 		switch (payloadType) {
 		case DoipMessage.TYPE_TCP_ALIVE_REQ:
 			DoipTcpAliveCheckRequest doipTcpAliveCheckRequest = new DoipTcpAliveCheckRequest();
@@ -275,32 +290,6 @@ public class DoipTcpConnection implements DoipTcpStreamBufferListener, TcpReceiv
 		}
 	}
 	
-	
-
-	
-	@Override
-	public void onPayloadCompleted(byte[] header, int payloadType, byte[] payload) {
-		if (logger.isTraceEnabled()) {
-			logger.trace(">>> void onPayloadCompleted(int payloadType, byte[] data)");
-		}
-		
-		boolean ret = false;
-		ret = processDataByFunction(header, payloadType, payload);
-		if (ret) {
-			return;
-		}
-		ret = processDataByLookupTable(header, payloadType, payload);
-		if (ret) {
-			return;
-		}
-		processDataByMessageInterpretation(header, payloadType, payload);
-		
-
-
-		if (logger.isTraceEnabled()) {
-			logger.trace("<<< void onPayloadCompleted(int payloadType, byte[] data)");
-		}
-	}
 
 	public void processDoipTcpDiagnosticMessage(DoipTcpDiagnosticMessage doipTcpDiagnosticMessage) {
 		String function = "void processDoipTcpDiagnosticMessage(DoipTcpDiagnosticMessage doipTcpDiagnosticMessage)";
