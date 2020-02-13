@@ -2,8 +2,8 @@ apply plugin: 'java-library'
 apply plugin: 'maven'
 apply plugin: 'eclipse'
 
-group = "doip"
-version = '1.1.3'
+//group = "doip"
+version = '1.1.4'
 
 repositories {
 	jcenter()
