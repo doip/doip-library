@@ -23,5 +23,4 @@ public class DoipUdpDiagnosticPowerModeRequest extends DoipUdpMessage {
 		byte[] message = new byte[] {0x02, (byte)0xFD, 0x40, 0x03, 0x00, 0x00, 0x00, 0x00};
 		return message;
 	}
-
 }

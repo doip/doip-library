@@ -113,7 +113,9 @@ public class TcpReceiverThread extends TcpReceiver implements Runnable {
 		}
 		try {
 			logger.debug("Close socket");
-			this.socket.close();
+			if (this.socket != null) {
+				this.socket.close();
+			}
 		} catch (IOException e) {
 			logger.error(Helper.getExceptionAsString(e));
 		}

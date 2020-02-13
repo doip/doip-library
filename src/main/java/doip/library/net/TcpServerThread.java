@@ -38,16 +38,20 @@ public class TcpServerThread extends TcpServer implements Runnable {
 	public void stop() {
 		logger.trace(">>> void stop()");
 		try {
-			this.socket.close();
+			if (this.socket != null) {
+				this.socket.close();
+			}
 		} catch (IOException e) {
 			logger.error(Helper.getExceptionAsString(e));
 		}
+		
 		try {
 			this.thread.join();
 		} catch (InterruptedException e) {
 			logger.error(Helper.getExceptionAsString(e));
 		}
 		this.thread = null;
+		
 		logger.trace("<<< void stop()");
 	}
 
