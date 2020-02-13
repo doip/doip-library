@@ -249,7 +249,7 @@ public class DoipUdpMessageHandler implements UdpReceiverListener {
 			doipUdpMessage = DoipUdpMessage.parseUDP(data);
 		} catch (HeaderTooShort e) {
 			logger.warn(Helper.getExceptionAsString(e));
-			this.onHdeaderTooShort(packet);
+			this.onHeaderTooShort(packet);
 
 		} catch (IncorrectPatternFormat e) {
 			logger.warn(Helper.getExceptionAsString(e));
@@ -264,26 +264,28 @@ public class DoipUdpMessageHandler implements UdpReceiverListener {
 			this.onInvalidPayloadType(packet);
 		}
 
-		if (doipUdpMessage instanceof DoipUdpVehicleIdentRequest) {
-			this.onDoipUdpVehicleIdentRequest((DoipUdpVehicleIdentRequest) doipUdpMessage, packet);
-		} else if (doipUdpMessage instanceof DoipUdpVehicleIdentRequestWithEid) {
-			this.onDoipUdpVehicleIdentRequestWithEid((DoipUdpVehicleIdentRequestWithEid) doipUdpMessage, packet);
-		} else if (doipUdpMessage instanceof DoipUdpVehicleIdentRequestWithVin) {
-			this.onDoipUdpVehicleIdentRequestWithVin((DoipUdpVehicleIdentRequestWithVin) doipUdpMessage, packet);
-		} else if (doipUdpMessage instanceof DoipUdpVehicleAnnouncementMessage) {
-			this.onDoipUdpVehicleAnnouncementMessage((DoipUdpVehicleAnnouncementMessage) doipUdpMessage, packet);
-		} else if (doipUdpMessage instanceof DoipUdpDiagnosticPowerModeRequest) {
-			this.onDoipUdpDiagnosticPowerModeRequest((DoipUdpDiagnosticPowerModeRequest) doipUdpMessage, packet);
-		} else if (doipUdpMessage instanceof DoipUdpDiagnosticPowerModeResponse) {
-			this.onDoipUdpDiagnosticPowerModeResponse((DoipUdpDiagnosticPowerModeResponse) doipUdpMessage, packet);
-		} else if (doipUdpMessage instanceof DoipUdpEntityStatusRequest) {
-			this.onDoipUdpEntityStatusRequest((DoipUdpEntityStatusRequest) doipUdpMessage, packet);
-		} else if (doipUdpMessage instanceof DoipUdpEntityStatusResponse) {
-			this.onDoipUdpEntityStatusResponse((DoipUdpEntityStatusResponse) doipUdpMessage, packet);
-		} else if (doipUdpMessage instanceof DoipHeaderNegAck) {
-			this.onDoipUdpHeaderNegAck((DoipUdpHeaderNegAck) doipUdpMessage, packet);
-		} else {
-			logger.fatal("Unhandled UDP message which is instance of " + doipUdpMessage.getClass().getName());
+		if (doipUdpMessage != null) {
+			if (doipUdpMessage instanceof DoipUdpVehicleIdentRequest) {
+				this.onDoipUdpVehicleIdentRequest((DoipUdpVehicleIdentRequest) doipUdpMessage, packet);
+			} else if (doipUdpMessage instanceof DoipUdpVehicleIdentRequestWithEid) {
+				this.onDoipUdpVehicleIdentRequestWithEid((DoipUdpVehicleIdentRequestWithEid) doipUdpMessage, packet);
+			} else if (doipUdpMessage instanceof DoipUdpVehicleIdentRequestWithVin) {
+				this.onDoipUdpVehicleIdentRequestWithVin((DoipUdpVehicleIdentRequestWithVin) doipUdpMessage, packet);
+			} else if (doipUdpMessage instanceof DoipUdpVehicleAnnouncementMessage) {
+				this.onDoipUdpVehicleAnnouncementMessage((DoipUdpVehicleAnnouncementMessage) doipUdpMessage, packet);
+			} else if (doipUdpMessage instanceof DoipUdpDiagnosticPowerModeRequest) {
+				this.onDoipUdpDiagnosticPowerModeRequest((DoipUdpDiagnosticPowerModeRequest) doipUdpMessage, packet);
+			} else if (doipUdpMessage instanceof DoipUdpDiagnosticPowerModeResponse) {
+				this.onDoipUdpDiagnosticPowerModeResponse((DoipUdpDiagnosticPowerModeResponse) doipUdpMessage, packet);
+			} else if (doipUdpMessage instanceof DoipUdpEntityStatusRequest) {
+				this.onDoipUdpEntityStatusRequest((DoipUdpEntityStatusRequest) doipUdpMessage, packet);
+			} else if (doipUdpMessage instanceof DoipUdpEntityStatusResponse) {
+				this.onDoipUdpEntityStatusResponse((DoipUdpEntityStatusResponse) doipUdpMessage, packet);
+			} else if (doipUdpMessage instanceof DoipHeaderNegAck) {
+				this.onDoipUdpHeaderNegAck((DoipUdpHeaderNegAck) doipUdpMessage, packet);
+			} else {
+				logger.fatal("Unhandled UDP message which is instance of " + doipUdpMessage.getClass().getName());
+			}
 		}
 
 		if (logger.isTraceEnabled()) {
@@ -452,7 +454,7 @@ public class DoipUdpMessageHandler implements UdpReceiverListener {
 
 		if (logger.isTraceEnabled()) {
 			logger.trace(
-					">>> public void onDoipUdpHeaderNegAck(DoipUdpHeaderNegAck doipMessage, DatagramPacket packet)");
+					"<<< public void onDoipUdpHeaderNegAck(DoipUdpHeaderNegAck doipMessage, DatagramPacket packet)");
 		}
 	}
 
@@ -476,7 +478,7 @@ public class DoipUdpMessageHandler implements UdpReceiverListener {
 		}
 	}
 
-	public void onHdeaderTooShort(DatagramPacket packet) {
+	public void onHeaderTooShort(DatagramPacket packet) {
 		if (logger.isTraceEnabled()) {
 			logger.trace(">>> public void onHdeaderTooShort(DatagramPacket packet)");
 		}
