@@ -130,6 +130,7 @@ public class DoipTcpConnection implements DoipTcpStreamBufferListener, TcpReceiv
 		try {
 			if (logger.isInfoEnabled()) {
 				logger.info("TCP-SEND: Target = " + socket.getInetAddress().getHostAddress() + ":" + socket.getPort()
+						+ ", Length = " + data.length 
 						+ ", Data = " + Conversion.byteArrayToHexStringShortDotted(data, this.maxByteArraySizeLogging));
 			}
 			OutputStream stream = this.socket.getOutputStream();
