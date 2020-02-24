@@ -65,6 +65,15 @@ public class PropertyFile {
 			return this.getOptionalPropertyAsString(key);
 		}
 	}
+	
+	public boolean getPropertyAsBoolean(String key, boolean mandatory) 
+			throws MissingProperty, EmptyPropertyValue {
+		if (mandatory) {
+			return this.getMandatoryPropertyAsBoolean(key);
+		} else {
+			return this.getOptionalPropertyAsBoolean(key);
+		}
+	}
 
 	public InetAddress getPropertyAsInetAddress(String key, boolean mandatory)
 			throws UnknownHostException, MissingProperty, EmptyPropertyValue {
@@ -112,6 +121,15 @@ public class PropertyFile {
 			throw new EmptyPropertyValue(key);
 		return value;
 	}
+	
+	public boolean getOptionalPropertyAsBoolean(String key) 
+			throws EmptyPropertyValue {
+		String value = this.properties.getProperty(key);
+		if (value == null) return false;
+		if (value == "") throw new EmptyPropertyValue(key);
+		if (value.toLowerCase().equals("true")) return true;
+		return false;
+	}
 
 	public InetAddress getMandatoryPropertyAsInetAddress(String key)
 			throws MissingProperty, EmptyPropertyValue, UnknownHostException {
@@ -147,6 +165,15 @@ public class PropertyFile {
 		}  else {
 			return Integer.parseInt(value);
 		}
+	}
+	
+	public boolean getMandatoryPropertyAsBoolean(String key) 
+			throws MissingProperty, EmptyPropertyValue {
+		String value = this.properties.getProperty(key);
+		if (value == null) throw new MissingProperty(key);
+		if (value == "") throw new EmptyPropertyValue(key);
+		if (value.toLowerCase().equals("true")) return true;
+		return false;
 	}
 
 	public int getOptionalPropertyAsInt(String key) throws EmptyPropertyValue {
