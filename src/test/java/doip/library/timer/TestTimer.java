@@ -1,8 +1,9 @@
 package doip.library.timer;
 
-import org.junit.Test;
 
-import doip.junit.Assert;
+import org.junit.jupiter.api.Test;
+
+import doip.junit.Assertions;
 import doip.logging.LogManager;
 import doip.logging.Logger;
 
@@ -21,7 +22,7 @@ public class TestTimer implements TimerListener {
 		timer.start(100, 5);
 		sleep(800);
 		timer.stop();
-		Assert.assertEquals(5, count);
+		Assertions.assertEquals(5, count);
 	}
 	
 	@Test
@@ -32,7 +33,7 @@ public class TestTimer implements TimerListener {
 		timer.start(100, 0);
 		sleep(810);
 		timer.stop();
-		Assert.assertTrue(count >= 8);
+		Assertions.assertTrue(count >= 8);
 	}
 
 	@Override
