@@ -1,6 +1,6 @@
 apply plugin: 'java-library'
 apply plugin: 'eclipse'
-apply plugin: 'checkstyle'
+//apply plugin: 'checkstyle'
 
 group = "com.github.doip"
 version = '1.2.0'
