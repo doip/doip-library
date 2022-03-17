@@ -1,8 +1,8 @@
 package doip.library.message;
 
-import static doip.junit.Assert.*;
+import static doip.junit.Assertions.*;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import doip.library.util.Conversion;
 

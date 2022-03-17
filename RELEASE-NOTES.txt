@@ -1,0 +1,50 @@
+==============================================================================
+
+                        DoIP - Diagnostics over IP
+                         Component: DoIP Library
+
+==============================================================================
+
+INTRODUCTION
+============
+The "DoIP Library" contains common implementation for DoIP which can be
+used in a DoIP simulation as well as in a DoIP tester.
+
+The source code is hosted at GitHub
+https://github.com/doip/doip-library.git
+
+A documentation of the whole project is available at
+http://automotive-doip.com/downloads/DoIP-Software-Documentation.pdf
+
+==============================================================================
+
+                     Release Notes for Version: 1.2.0
+
+CHANGES
+=======
+
+- Issue #16:    Update to JUnit 5, Gradle 7.3, doip-logging 1.2.0,
+                doip-junit 1.1.1.
+
+==============================================================================
+
+                     Release Notes for Version: 1.1.5
+
+NEW FEATURES
+============
+
+- Issue #11:    Implemented class StringConstants which just contains some
+                static strings for logging some lines and borders. This
+                ensures that all lines in the project have the same layout.
+- Issue #12:    PropertyFile can now also read boolean values.
+
+
+FIXED BUGS
+==========
+
+  n/a
+
+CHANGES
+=======
+
+  n/a

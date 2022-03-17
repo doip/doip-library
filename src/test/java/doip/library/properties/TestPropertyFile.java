@@ -1,40 +1,50 @@
 package doip.library.properties;
+import static doip.junit.Assertions.*;
 
-import static org.junit.Assert.*;
-
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.opentest4j.AssertionFailedError;
+
+import doip.logging.LogManager;
+import doip.logging.Logger;
 
 public class TestPropertyFile {
 	
+	private static Logger logger = LogManager.getLogger(TestPropertyFile.class);
+	
 	private PropertyFile props = null;
 
-	@BeforeClass
+	@BeforeAll
 	public static void setUpBeforeClass() throws Exception {
 	}
 
-	@AfterClass
+	@AfterAll
 	public static void tearDownAfterClass() throws Exception {
 	}
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		props = new PropertyFile("src/test/resources/test.properties");
 	}
 
-	@After
+	@AfterEach
 	public void tearDown() throws Exception {
 		props = null;
 	}
 
-	@Test(expected = IOException.class)
+	@Test
 	public void testLoadUnexistingFile() throws IOException {
-		new PropertyFile("BlackHole.properties");
+		assertThrows(
+				FileNotFoundException.class, 
+				() -> { 
+					new PropertyFile("BlackHole.properties");
+				});
 	}
 
 	@Test

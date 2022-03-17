@@ -1,10 +1,8 @@
 package doip.library.util;
 
-import static doip.junit.Assert.*;
+import static doip.junit.Assertions.*;
 
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Test;
 
 import doip.library.util.Conversion;
 
@@ -46,6 +44,6 @@ public class TestConversion {
 	public void testAsciiStringToByteArray() {
 		byte[] actuals = Conversion.asciiStringToByteArray("ABC 123");
 		byte[] expecteds = new byte[] {0x41, 0x42, 0x43, 0x20, 0x31, 0x32, 0x33};
-		Assert.assertArrayEquals(expecteds, actuals);
+		assertArrayEquals(expecteds, actuals);
 	}
 }
