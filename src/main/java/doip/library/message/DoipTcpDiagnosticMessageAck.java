@@ -17,7 +17,9 @@ public abstract class DoipTcpDiagnosticMessageAck extends DoipTcpMessage {
 		this.sourceAddress = sourceAddress;
 		this.targetAddress = targetAddress;
 		this.ackCode = ackCode;
-		this.diagnosticMessage = message;
+		if (message != null) {
+			this.diagnosticMessage = message;
+		}
 	}
 
 	@Override
@@ -92,7 +94,11 @@ public abstract class DoipTcpDiagnosticMessageAck extends DoipTcpMessage {
 	}
 
 	public void setDiagnosticMessage(byte[] diagnosticMessage) {
-		this.diagnosticMessage = diagnosticMessage;
+		if (diagnosticMessage == null) {
+			this.diagnosticMessage = new byte[0];
+		} else {
+			this.diagnosticMessage = diagnosticMessage;
+		}
 	}
 
 }
