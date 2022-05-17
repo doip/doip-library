@@ -10,4 +10,8 @@ public class DoipException extends Exception {
 	public DoipException(String string) {
 		super(string);
 	}
+	
+	public DoipException(String message, Throwable cause) {
+		super(message, cause);
+	}
 }
