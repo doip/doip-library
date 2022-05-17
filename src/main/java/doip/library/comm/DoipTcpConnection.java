@@ -25,7 +25,16 @@ import doip.library.util.Helper;
 
 /**
  * Implements features for a TCP connection. It can be used in a DoIP
- * simulation as well as in a DoIP tester. this class contains two important
+ * simulation as well as in a DoIP tester. 
+ * 
+ * But be aware that the listeners functions which will be called in case
+ * of a invalid message will send a DoIP negative acknowledgement message.
+ * But a diagnostic tester should not send a negative acknowledgement
+ * message to avoid "ping-pong" behavior. If this class is used in a 
+ * diagnostic tester you should override these methods and just do nothing
+ * in the function.   
+ * 
+ * This class contains two important
  * members: A instance of a DoipStreamBuffer and an instance of a
  * TcpReceiverThread. When the function "start(Socket socket)" will be called
  * this class creates a new TcpReceiverThread which is listening for incoming
@@ -63,6 +72,11 @@ public class DoipTcpConnection implements DoipTcpStreamBufferListener, TcpReceiv
 	 */
 	private Socket socket = null;
 	
+	/**
+	 * Defines the maximum number (N) of bytes which will be printed from a byte field.
+	 * If the byte field is longer then only the first N bytes will be printed
+	 * followed by three dots.  
+	 */
 	private int maxByteArraySizeLogging = 64;
 
 	/**
@@ -105,6 +119,16 @@ public class DoipTcpConnection implements DoipTcpStreamBufferListener, TcpReceiv
 			logger.trace(">>> public void stop()");
 		}
 		this.tcpReceiverThread.stop();
+		
+		/* Give the thread some time to terminate and call the listeners.
+		 * The thread will call the function "onSocketClosed(...)".
+		 * If it is too fast then function removeListener will remove listener
+		 * before it had a chance to call the method onSocketClosed().
+		 */
+		try {
+			Thread.sleep(10);
+		} catch (InterruptedException e) {
+		};
 		this.tcpReceiverThread.removeListener(this);
 		if (logger.isTraceEnabled()) {
 			logger.trace("<<< public void stop()");
@@ -202,8 +226,6 @@ public class DoipTcpConnection implements DoipTcpStreamBufferListener, TcpReceiv
 			logger.trace("<<< void onHeaderUnknownPayloadType()");
 		}
 	}
-	
-	// TODO: Clean up
 
 	@Override
 	public void onHeaderInvalidPayloadLength() {
@@ -224,20 +246,22 @@ public class DoipTcpConnection implements DoipTcpStreamBufferListener, TcpReceiv
 
 	@Override
 	public void onPayloadCompleted(byte[] header, int payloadType, byte[] payload) {
-		if (logger.isTraceEnabled()) {
-			logger.trace(">>> void onPayloadCompleted(int payloadType, byte[] data)");
-		}
-		
-		boolean ret = false;
-		ret = processDataByCustomHandler(header, payloadType, payload);
-		if (ret) {
-			return;
-		}
-		
-		processDataByStandardHandler(header, payloadType, payload);
-
-		if (logger.isTraceEnabled()) {
-			logger.trace("<<< void onPayloadCompleted(int payloadType, byte[] data)");
+		try {
+			if (logger.isTraceEnabled()) {
+				logger.trace(">>> void onPayloadCompleted(int payloadType, byte[] data)");
+			}
+			
+			boolean ret = false;
+			ret = processDataByCustomHandler(header, payloadType, payload);
+			if (ret) {
+				return;
+			}
+			processDataByStandardHandler(header, payloadType, payload);
+	
+		} finally {
+			if (logger.isTraceEnabled()) {
+				logger.trace("<<< void onPayloadCompleted(int payloadType, byte[] data)");
+			}
 		}
 	}
 	
@@ -406,12 +430,17 @@ public class DoipTcpConnection implements DoipTcpStreamBufferListener, TcpReceiv
 		}
 	}
 
-	/*
-	 * @Override public void onShredderCompleted(long payloadLength) {
-	 * logger.trace(">>> void onShredderCompleted(long payloadLength)"); logger.
-	 * warn("No implementation for void onShredderCompleted(long payloadLength)");
-	 * logger.trace("<<< void onShredderCompleted(long payloadLength)"); }
-	 */
+	@Override
+	public void onSocketClosed() {
+		logger.trace(">>> public void onSocketClosed()");
+		logger.debug("Number of listeners: " + this.listeners.size());
+		Iterator<DoipTcpConnectionListener> iter = this.listeners.iterator();
+		while (iter.hasNext()) {
+			DoipTcpConnectionListener listener = iter.next();
+			listener.onConnectionClosed(this);
+		}
+		logger.trace("<<< public void onSocketClosed()");
+	}
 
 	public void addListener(DoipTcpConnectionListener listener) {
 		logger.trace(">>> void addListener(DoipTcpConnectionListener listener)");
@@ -424,18 +453,6 @@ public class DoipTcpConnection implements DoipTcpStreamBufferListener, TcpReceiv
 		this.listeners.remove(listener);
 		logger.trace("<<< void removeListener(DoipTcpConnectionListener listener)");
 	}
-
-	@Override
-	public void onSocketClosed() {
-		logger.trace(">>> public void onSocketClosed()");
-		Iterator<DoipTcpConnectionListener> iter = this.listeners.iterator();
-		while (iter.hasNext()) {
-			DoipTcpConnectionListener listener = iter.next();
-			listener.onConnectionClosed(this);
-		}
-		logger.trace("<<< public void onSocketClosed()");
-	}
-
 	@Override
 	public void onShredderCompleted(long payloadLength) {
 		logger.trace(">>> public void onShredderCompleted(long payloadLength)");
