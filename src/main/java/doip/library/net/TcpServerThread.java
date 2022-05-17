@@ -64,6 +64,9 @@ public class TcpServerThread extends TcpServer implements Runnable {
 		return isAlive;
 	}
 
+	/**
+	 * That is the function which is running in a separate thread.
+	 */
 	@Override
 	public void run() {
 		logger.trace(">>> void run()");
