@@ -18,6 +18,15 @@ http://automotive-doip.com/downloads/DoIP-Software-Documentation.pdf
 
 ==============================================================================
 
+                     Release Notes for Version: 1.2.1
+
+CHANGES
+=======
+
+- Issue #19:    Minor changes (see git logs for details)
+
+==============================================================================
+
                      Release Notes for Version: 1.2.0
 
 CHANGES
