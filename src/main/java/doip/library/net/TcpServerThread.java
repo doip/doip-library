@@ -28,31 +28,45 @@ public class TcpServerThread extends TcpServer implements Runnable {
 	}
 
 	public void start(ServerSocket socket) {
-		logger.trace(">>> void start(ServerSocket socket)");
-		this.socket = socket;
-		this.thread = new Thread(this, this.threadName);
-		this.thread.start();
-		logger.trace("<<< void start(ServerSocket socket)");
+		try  {
+			logger.trace(">>> void start(ServerSocket socket)");
+			this.socket = socket;
+			this.thread = new Thread(this, this.threadName);
+			this.thread.start();
+		} finally {
+			logger.trace("<<< void start(ServerSocket socket)");
+		}
+		
 	}
 
 	public void stop() {
-		logger.trace(">>> void stop()");
 		try {
+			logger.trace(">>> void stop()");
 			if (this.socket != null) {
-				this.socket.close();
+				try {
+					this.socket.close();
+					
+				} catch (IOException e) {
+					logger.error("Unexpected IOException when calling socket.close()");
+					logger.error("Will following exception will give you any hint why this happens?");
+					logger.error(Helper.getExceptionAsString(e));	
+				}
 			}
-		} catch (IOException e) {
-			logger.error(Helper.getExceptionAsString(e));
-		}
+			
+			if (this.thread != null) {
+				try {
+					this.thread.join();
+				} catch (InterruptedException e) {
+					logger.error("Unexpected InterruptedException");
+					logger.error("Will following exception will give you any hint why this happens?");
+					logger.error(Helper.getExceptionAsString(e));	
+				}
+				this.thread = null;
+			} 
 		
-		try {
-			this.thread.join();
-		} catch (InterruptedException e) {
-			logger.error(Helper.getExceptionAsString(e));
+		} finally {		
+			logger.trace("<<< void stop()");
 		}
-		this.thread = null;
-		
-		logger.trace("<<< void stop()");
 	}
 
 	public synchronized boolean isAlive() {
