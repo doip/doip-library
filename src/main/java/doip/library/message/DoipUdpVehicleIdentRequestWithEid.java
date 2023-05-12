@@ -2,9 +2,9 @@ package doip.library.message;
 
 import java.util.Arrays;
 
-import doip.logging.Level;
-import doip.logging.LogManager;
-import doip.logging.Logger;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import doip.library.util.Conversion;
 

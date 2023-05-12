@@ -2,8 +2,8 @@ package doip.library.util;
 
 import java.util.Arrays;
 
-import doip.logging.LogManager;
-import doip.logging.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class StreamBuffer {
 	

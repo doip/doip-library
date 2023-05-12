@@ -5,8 +5,8 @@ import static doip.junit.Assertions.*;
 import org.junit.jupiter.api.Test;
 
 import doip.library.util.Conversion;
-import doip.logging.LogManager;
-import doip.logging.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class TestDoipTcpAliveCheckRequest {
 	
