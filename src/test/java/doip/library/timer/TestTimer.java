@@ -4,8 +4,8 @@ package doip.library.timer;
 import org.junit.jupiter.api.Test;
 
 import doip.junit.Assertions;
-import doip.logging.LogManager;
-import doip.logging.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 
 public class TestTimer implements TimerListener {

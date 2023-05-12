@@ -5,8 +5,8 @@ import java.net.DatagramSocket;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-import doip.logging.LogManager;
-import doip.logging.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Implements the publisher for listening on a UDP socket. It informs

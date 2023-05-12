@@ -5,8 +5,8 @@ import java.io.InputStream;
 import java.net.Socket;
 import java.util.Arrays;
 
-import doip.logging.LogManager;
-import doip.logging.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import doip.library.util.Conversion;
 import doip.library.util.Helper;

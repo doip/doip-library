@@ -15,10 +15,10 @@ public interface DoipTcpConnectionListener {
 
 	public void onDoipTcpDiagnosticMessage(DoipTcpConnection doipTcpConnection, DoipTcpDiagnosticMessage doipMessage);
 
-	public void onDoipTcpDiagnosticMessageNegAck(DoipTcpConnection doipTcpConnection, DoipTcpDiagnosticMessageNegAck doipMessage);
-	
 	public void onDoipTcpDiagnosticMessagePosAck(DoipTcpConnection doipTcpConnection, DoipTcpDiagnosticMessagePosAck doipMessage);
 	
+    public void onDoipTcpDiagnosticMessageNegAck(DoipTcpConnection doipTcpConnection, DoipTcpDiagnosticMessageNegAck doipTcpDiagnosticMessageNegAck);
+
 	public void onDoipTcpRoutingActivationRequest(DoipTcpConnection doipTcpConnection, DoipTcpRoutingActivationRequest doipMessage);
 	
 	public void onDoipTcpRoutingActivationResponse(DoipTcpConnection doipTcpConnection, DoipTcpRoutingActivationResponse doipMessage);
@@ -28,4 +28,5 @@ public interface DoipTcpConnectionListener {
 	public void onDoipTcpAliveCheckResponse(DoipTcpConnection doipTcpConnection, DoipTcpAliveCheckResponse doipMessage);
 	
 	public void onDoipTcpHeaderNegAck(DoipTcpConnection doipTcpConnection, DoipTcpHeaderNegAck doipMessage);
+
 }
