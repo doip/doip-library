@@ -7,6 +7,8 @@ import java.util.Arrays;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.Marker;
+import org.apache.logging.log4j.MarkerManager;
 
 import doip.library.util.Conversion;
 import doip.library.util.Helper;
@@ -24,43 +26,35 @@ import doip.library.util.Helper;
  */
 public class TcpReceiverThread extends TcpReceiver implements Runnable {
 
-	/**
-	 * log4j logger
-	 */
-	private Logger logger = LogManager.getLogger(TcpReceiverThread.class);
+	/** Log4j logger */
+	private static Logger logger = LogManager.getLogger(TcpReceiverThread.class);
 
-	/**
-	 * This is the thread which will be started.
-	 */
+	/** Log4j marker for function entry */
+	private static Marker enter = MarkerManager.getMarker("ENTER");
+	
+	/** Log4j marker for function exit */
+	private static Marker exit = MarkerManager.getMarker("EXIT'");
+	
+	/** This is the thread which will be started. */
 	private volatile Thread thread = null;
 
 	/**
-	 * Name of the thread. This can be any name. It will be used in log4j when the
-	 * thread name will be logged in the log file.
+	 * Name of the thread. This can be any name. It will be used in Log4j
+	 * when the thread name will be logged in the log file.
 	 */
 	private String threadName = null;
 
-	/**
-	 * The socket on which the thread will listen for incoming data.
-	 */
+	/** The socket on which the thread will listen for incoming data. */
 	private volatile Socket socket = null;
 
-	/**
-	 * Maximum number of bytes which will be logged.
-	 */
+	/** Maximum number of bytes which will be logged for messages. */
 	private int maxByteArraySizeLogging = 64;
-
-	/**
-	 * This constructor shall never be used so it had been declared private.
-	 */
-	@SuppressWarnings("unused")
-	private TcpReceiverThread() {
-	}
 
 	/**
 	 * Constructor with the thread name.
 	 * 
 	 * @param threadName Thread name which will be logged in the log file.
+	 * @param maxByteArraySizeLogging @see maxByteArraySizeLogging
 	 */
 	public TcpReceiverThread(String threadName, int maxByteArraySizeLogging) {
 		this.threadName = threadName;
@@ -73,15 +67,11 @@ public class TcpReceiverThread extends TcpReceiver implements Runnable {
 	 * @return
 	 */
 	public synchronized boolean isAlive() {
-		if (logger.isTraceEnabled()) {
-			this.logger.trace(">>> boolean isAlive()");
-		}
+		logger.trace(">>> boolean isAlive()");
 		if (this.thread == null)
 			return false;
 		boolean isAlive = this.thread.isAlive();
-		if (logger.isTraceEnabled()) {
-			this.logger.trace("<<< boolean isAlive()");
-		}
+		logger.trace("<<< boolean isAlive()");
 		return isAlive;
 	}
 
@@ -91,15 +81,11 @@ public class TcpReceiverThread extends TcpReceiver implements Runnable {
 	 * @param socket Socket on which the thread will listen for new incoming data.
 	 */
 	public void start(Socket socket) {
-		if (logger.isTraceEnabled()) {
-			this.logger.trace(">>> void start()");
-		}
+		logger.trace(">>> void start()");
 		this.socket = socket;
 		this.thread = new Thread(this, this.threadName);
 		this.thread.start();
-		if (logger.isTraceEnabled()) {
-			this.logger.trace("<<< void start()");
-		}
+		logger.trace("<<< void start()");
 	}
 
 	/**
@@ -108,9 +94,7 @@ public class TcpReceiverThread extends TcpReceiver implements Runnable {
 	 * socket.
 	 */
 	public void stop() {
-		if (logger.isTraceEnabled()) {
-			this.logger.trace(">>> void stop()");
-		}
+		logger.trace(">>> void stop()");
 		try {
 			logger.debug("Close socket");
 			if (this.socket != null) {
@@ -128,9 +112,7 @@ public class TcpReceiverThread extends TcpReceiver implements Runnable {
 //			logger.error(Helper.getExceptionAsString(e));
 //		}
 		this.thread = null;
-		if (logger.isTraceEnabled()) {
-			this.logger.trace("<<< void stop()");
-		}
+		logger.trace("<<< void stop()");
 	}
 
 	/**
@@ -139,18 +121,13 @@ public class TcpReceiverThread extends TcpReceiver implements Runnable {
 	 */
 	@Override
 	public void run() {
-		if (logger.isTraceEnabled()) {
-			this.logger.trace(">>> void run()");
-		}
+		logger.trace(enter, ">>> void run()");
 
 		try {
 			byte[] data = new byte[0x10000];
 			InputStream inputStream = this.socket.getInputStream();
 			for (;;) {
-				if (logger.isDebugEnabled()) {
-					logger.debug("Read data from socket input stream (blocking read) ...");
-				}
-
+				logger.debug("Read data from socket input stream (blocking read) ...");
 				int count = inputStream.read(data);
 	
 				if (count <= 0) {
@@ -160,25 +137,25 @@ public class TcpReceiverThread extends TcpReceiver implements Runnable {
 				} else {
 					byte[] receivedData = Arrays.copyOf(data, count);
 				
-					if (logger.isInfoEnabled()) {
-						this.logger.info("TCP-RECV: Remote = " + this.socket.getInetAddress().getHostAddress() + ":"
-								+ this.socket.getPort() + ", Length = " + receivedData.length + ", Data = " + Conversion
-										.byteArrayToHexStringShortDotted(receivedData, this.maxByteArraySizeLogging));
-					}
+					logger.info("TCP-RECV: Remote = " + this.socket.getInetAddress().getHostAddress() + ":"
+							+ this.socket.getPort() + ", Length = " + receivedData.length + ", Data = " + Conversion
+								.byteArrayToHexStringShortDotted(receivedData, this.maxByteArraySizeLogging));
 				
 					this.onDataReceived(receivedData);
 				}
 			}
-			if (logger.isDebugEnabled()) {
-				logger.debug("No more data to receive. Thread will terminate.");
-			}
+			logger.debug("No more data to receive. Thread will terminate.");
+			
 		} catch (IOException e) {
+			logger.info("An IOException occured while reading data from the socket.");
+			logger.info("This might be because");
+			logger.info("    - the TCP connection has been closed by the remote host,");
+			logger.info("    - the connection has been closed by the local host or");
+			logger.info("    - a TCP communication error did occur.");
 			logger.info(Helper.getExceptionAsString(e));
 		}
 		this.onSocketClosed();
-		if (logger.isTraceEnabled()) {
-			this.logger.trace("<<< void run()");
-		}
+		logger.trace(exit, "<<< void run()");
 	}
 
 	public Socket getSocket() {

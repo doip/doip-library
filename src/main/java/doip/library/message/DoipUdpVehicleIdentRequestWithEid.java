@@ -25,6 +25,14 @@ public class DoipUdpVehicleIdentRequestWithEid extends DoipUdpMessage {
 		logger.log(level, "    EID = " + Conversion.byteArrayToHexString(this.eid));
 		logger.log(level, "----------------------------------------");
 	}
+	
+	public String getMessageName() {
+		return getPayloadTypeAsString(DoipMessage.TYPE_UDP_VIR_EID);
+	}
+
+	public static String getMessageNameOfClass() {
+		return getPayloadTypeAsString(DoipMessage.TYPE_UDP_VIR_EID);
+	}
 
 	@Override
 	public byte[] getMessage() {

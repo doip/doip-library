@@ -23,6 +23,14 @@ public class DoipTcpRoutingActivationResponse extends DoipTcpMessage {
 		this.log(Level.INFO);
 	}
 	
+	public String getMessageName() {
+		return getPayloadTypeAsString(DoipMessage.TYPE_TCP_ROUTING_RES);
+	}
+
+	public static String getMessageNameOfClass() {
+		return getPayloadTypeAsString(DoipMessage.TYPE_TCP_ROUTING_RES);
+	}
+	
 	public String getResponseCodeAsString(int code) {
 		switch (code) {
 		case 0x00:
@@ -98,8 +106,8 @@ public class DoipTcpRoutingActivationResponse extends DoipTcpMessage {
 			msg[19] = (byte) (this.oemData >> 8);
 			msg[20] = (byte) (this.oemData);
 		}
-		msg[0] = 0x02;
-		msg[1] = (byte) 0xFD;
+		msg[0] = 0x03;
+		msg[1] = (byte) 0xFC;
 		msg[2] = 0x00;
 		msg[3] = 0x06;
 		msg[4] = 0x00;

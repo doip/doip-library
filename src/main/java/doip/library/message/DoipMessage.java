@@ -1,6 +1,8 @@
 package doip.library.message;
 
 import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Base class for all DoIP Messages
@@ -28,6 +30,8 @@ public abstract class DoipMessage {
 	public final static int TYPE_TCP_DIAG_MESSAGE = 0x8001;
 	public final static int TYPE_TCP_DIAG_MESSAGE_POS_ACK = 0x8002;
 	public final static int TYPE_TCP_DIAG_MESSAGE_NEG_ACK = 0x8003;
+	
+	private static Logger logger = LogManager.getLogger(DoipMessage.class);
 
 	protected DoipMessage() {
 	}
@@ -36,43 +40,44 @@ public abstract class DoipMessage {
 
 	public abstract void log(Level level);
 	
-	public static String getPayloadTypeAsString(int type) {
+	public abstract String getMessageName();
+	
+	public static String getPayloadTypeAsString(int type) { 
 		switch (type) {
 		case 0x0000:
-			return "Generic DoIP Header Negative Acknowledge";
+			return "generic DoIP header negative acknowledge";
 		case 0x0001:
-			return "Vehicle Identification Request Message";
+			return "vehicle identification request message";
 		case 0x0002:
-			return "Vehicle Identification Request Message with EID";
+			return "vehicle identification request message with EID";
 		case 0x0003:
-			return "Vehicle Identification Request Message with VIN";
+			return "vehicle identification request message with VIN";
 		case 0x0004:
-			return "Vehicle Announcement Message";
+			return "vehicle announcement message";
 		case 0x0005:
-			return "Routing Activation Request";
+			return "routing activation request";
 		case 0x0006:
-			return "Routing Activation Response";
+			return "routing activation response";
 		case 0x0007:
-			return "Alive Check Request";
+			return "alive check request";
 		case 0x0008:
-			return "Alive Check Response";
+			return "alive check response";
 		case 0x4001:
-			return "DoIP Entity Status Request";
+			return "DoIP entity status request";
 		case 0x4002:
-			return "DoIP Entity Status Response";
+			return "DoIP entity status response";
 		case 0x4003:
-			return "Diagnostic Power Mode Information Request";
+			return "diagnostic power mode information request";
 		case 0x4004:
-			return "Diagnostic Power Mode Information Response";
+			return "diagnostic power mode information response";
 		case 0x8001:
-			return "Diagnostic Message";
+			return "diagnostic message";
 		case 0x8002:
-			return "Diagnostic Message Positive Acknowledgement";
+			return "diagnostic message positive acknowledgement";
 		case 0x8003:
-			return "Diagnostic Message Negative Acknowledgement";
+			return "diagnostic message negative acknowledgement";
 		default:
-			break;
+			throw logger.throwing(Level.FATAL, new IllegalArgumentException("An invaid value has been passed to function DoipMessage.getPayoadTypeAsString(int type)"));
 		}
-		return null;
 	}
 }

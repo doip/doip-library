@@ -17,6 +17,14 @@ public class DoipTcpDiagnosticMessagePosAck extends DoipTcpDiagnosticMessageAck 
 		log(Level.INFO);
 	}
 	
+	public String getMessageName() {
+		return getPayloadTypeAsString(DoipMessage.TYPE_TCP_DIAG_MESSAGE_POS_ACK);
+	}
+	
+	public static String getMessageNameOfClass() {
+		return getPayloadTypeAsString(DoipMessage.TYPE_TCP_DIAG_MESSAGE_POS_ACK);
+	}
+	
 	public void log(Level level) {
 		logger.log(level, "----------------------------------------");	
 		logger.log(level, "DoIP diagnostic message positive acknowledgement:");

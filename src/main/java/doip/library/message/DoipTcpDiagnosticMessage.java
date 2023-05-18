@@ -27,16 +27,23 @@ public class DoipTcpDiagnosticMessage extends DoipTcpMessage {
 			this.log(Level.INFO);
 		}
 	}
+	
+	public String getMessageName() {
+		return getPayloadTypeAsString(DoipMessage.TYPE_TCP_DIAG_MESSAGE); 
+	}
 
+	public static String getMessageNameOfClass() {
+		return getPayloadTypeAsString(DoipMessage.TYPE_TCP_DIAG_MESSAGE);
+	}
+	
 	public void log(Level level) {
 		logger.log(level, "----------------------------------------");
 		logger.log(level, "DoIP diagnostic message:");
-		logger.log(level, "    Source address = " + this.sourceAddress);
-		logger.log(level, "    Target address = " + this.targetAddress);
+		logger.log(level, "    Source address = " + String.format("0x%04X", this.sourceAddress));
+		logger.log(level, "    Target address = " + String.format("0x%04X", this.targetAddress));
 		logger.log(level,
 				"    Message        = " + Conversion.byteArrayToHexStringShortDotted(this.diagnosticMessage, 64));
 		logger.log(level, "----------------------------------------");
-
 	}
 
 	@Override
@@ -61,8 +68,8 @@ public class DoipTcpDiagnosticMessage extends DoipTcpMessage {
 	public byte[] getMessage() {
 
 		byte[] data = new byte[8 + 4 + diagnosticMessage.length];
-		data[0] = 0x02;
-		data[1] = (byte) 0xFD;
+		data[0] = 0x03;
+		data[1] = (byte) 0xFC;
 		data[2] = (byte) 0x80;
 		data[3] = 0x01;
 		data[4] = (byte) ((diagnosticMessage.length + 4) >> 24);
