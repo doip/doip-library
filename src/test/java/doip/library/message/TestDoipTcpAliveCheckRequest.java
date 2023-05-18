@@ -17,6 +17,6 @@ public class TestDoipTcpAliveCheckRequest {
 		DoipTcpAliveCheckRequest msg = new DoipTcpAliveCheckRequest();
 		String hexString = Conversion.byteArrayToHexString(msg.getMessage());
 		logger.info("HEX string = " + hexString);
-		assertEquals("02 FD 00 07 00 00 00 00", hexString);
+		assertEquals("03 FC 00 07 00 00 00 00", hexString);
 	}
 }

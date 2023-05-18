@@ -17,6 +17,14 @@ public class DoipUdpVehicleIdentRequest extends DoipUdpMessage {
 		logger.log(level, "DoIP vehicle identification request.");
 		logger.log(level, "----------------------------------------");
 	}
+	
+	public String getMessageName() {
+		return getPayloadTypeAsString(DoipMessage.TYPE_UDP_VIR);
+	}
+
+	public static String getMessageNameOfClass() {
+		return getPayloadTypeAsString(DoipMessage.TYPE_UDP_VIR);
+	}
 
 	@Override
 	public byte[] getMessage() {

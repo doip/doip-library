@@ -9,9 +9,6 @@ package doip.library.properties;
 @SuppressWarnings("serial")
 public class MissingProperty extends Exception {
 	
-	@SuppressWarnings("unused")
-	private MissingProperty() {}
-
 	/**
 	 * Constructor with the key
 	 * @param key The key which was expected to exist in the property file.

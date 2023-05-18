@@ -19,7 +19,15 @@ public class DoipTcpAliveCheckRequest extends DoipTcpMessage {
 		logger.log(level, "DoIP alive check request");
 		logger.log(level, "----------------------------------------");
 	}
+	
+	public String getMessageName() {
+		return getPayloadTypeAsString(DoipMessage.TYPE_TCP_ALIVE_REQ);
+	}
 
+	public static String getMessageNameOfClass() {
+		return getPayloadTypeAsString(DoipMessage.TYPE_TCP_ALIVE_REQ);
+	}
+	
 	@Override
 	public void parsePayload(byte[] payload) {
 		// Nothing to parse because there is no payload
@@ -27,7 +35,7 @@ public class DoipTcpAliveCheckRequest extends DoipTcpMessage {
 
 	@Override
 	public byte[] getMessage() {
-		byte[] message = new byte[] { 0x02, (byte) 0xFD, 0x00, 0x07, 0x00, 0x00, 0x00, 0x00 };
+		byte[] message = new byte[] { 0x03, (byte) 0xFC, 0x00, 0x07, 0x00, 0x00, 0x00, 0x00 };
 		return message;
 	}
 

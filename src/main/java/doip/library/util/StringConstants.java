@@ -5,30 +5,30 @@ public class StringConstants {
 	/**
 	 * String with 78 characters '-'
 	 */
-	public static final String LINE  = "------------------------------------------------------------------------------";
+	public static final String SINGLE_LINE  = "------------------------------------------------------------------------------";
 	
 	/**
 	 * String with 78 characters '#'
 	 */
-	public static final String FENCE = "##############################################################################";
+	public static final String HASH_LINE = "##############################################################################";
 	
 	/**
 	 * String with 78 characters '='
 	 */
-	public static final String WALL  = "==============================================================================";
+	public static final String DOUBLE_LINE  = "==============================================================================";
 	
 	/**
 	 * String with 36 characters "-"
 	 */
-	public static final String SHORTLINE  = "------------------------------------";
+	public static final String SHORT_SINGLE_LINE  = "------------------------------------";
 	
 	/**
 	 * String with 36 characters '#'
 	 */
-	public static final String SHORTFENCE = "####################################";
+	public static final String SHORT_HASH_LINE = "####################################";
 	
 	/**
 	 * String with 36 characters '='
 	 */
-	public static final String SHORTWALL  = "====================================";
+	public static final String SHORT_DOUBLE_LINE  = "====================================";
 }

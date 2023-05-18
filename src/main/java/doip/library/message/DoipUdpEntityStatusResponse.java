@@ -25,6 +25,14 @@ public class DoipUdpEntityStatusResponse extends DoipUdpMessage {
 		this.log(Level.INFO);
 	}
 	
+	public String getMessageName() {
+		return getPayloadTypeAsString(DoipMessage.TYPE_UDP_ENTITY_STATUS_RES);
+	}
+	
+	public static String getMessageNameOfClass() {
+		return getPayloadTypeAsString(DoipMessage.TYPE_UDP_ENTITY_STATUS_RES);
+	}
+
 	public void log(Level level) {
 		logger.log(level, "----------------------------------------");
 		logger.log(level, "DoIP entity status response:");
@@ -38,8 +46,8 @@ public class DoipUdpEntityStatusResponse extends DoipUdpMessage {
 	@Override
 	public byte[] getMessage() {
 		byte[] msg = new byte[15];
-		msg[0] = 0x02;
-		msg[1] = (byte) 0xFD;
+		msg[0] = 0x03;
+		msg[1] = (byte) 0xFC;
 		msg[2] = 0x40;
 		msg[3] = 0x02;
 		msg[4] = 0x00;

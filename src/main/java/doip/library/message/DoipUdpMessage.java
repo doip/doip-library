@@ -95,7 +95,9 @@ public abstract class DoipUdpMessage extends DoipMessage {
 //---------------------------------------------------------
 		case 0x0004: // VAM; UDP
 //---------------------------------------------------------
-			checkPayloadLength(33, payloadLength, data.length);
+			/* The last byte could be optional, therefore we
+			   use specific method to check the payload length */
+			checkPayloadLength_0x0004_VAM(payloadLength, data.length);
 
 			// VIN
 			vin = new byte[17];
@@ -118,7 +120,13 @@ public abstract class DoipUdpMessage extends DoipMessage {
 			int furtherActionRequired = data[39] & 0xFF;
 
 			// Sync Status
-			byte syncStatus = data[40];
+			int syncStatus;
+			if (payloadLength == 33) {
+				syncStatus = (data[40] & 0xFF);
+			} else {
+				syncStatus = -1;
+			}
+
 
 			logger.trace("<<< DoipMessage parseUDP(byte[] data)");
 			return new DoipUdpVehicleAnnouncementMessage(vin, logicalAddress, eid, gid, furtherActionRequired,
@@ -185,12 +193,45 @@ public abstract class DoipUdpMessage extends DoipMessage {
 	 */
 	private static void checkPayloadLength(long expectedLength, long payloadLength, long dataLength)
 			throws InvalidPayloadLength {
-		logger.trace(">>> void checkPayloadLength(long expectedLength, long payloadLength, long dataLength)");
-		logger.debug("\tExpected Payload Length  = " + expectedLength);
-		if ((payloadLength != expectedLength) || (payloadLength != (dataLength - 8))) {
-			logger.warn("Invalid payload length.");
-			throw new InvalidPayloadLength();
+		try {
+			logger.trace(">>> void checkPayloadLength(long expectedLength, long payloadLength, long dataLength)");
+			
+			if (payloadLength != expectedLength) {
+				logger.warn("The payload length given in the DoIP header is invalid. " +
+						"It should be " + expectedLength + ", but it is " + payloadLength + ".");
+				throw new InvalidPayloadLength();
+			}
+			logger.debug("\tExpected Payload Length  = " + expectedLength);
+			if (payloadLength != (dataLength - 8)) {
+				logger.warn("The payload length given in the DoIP header does not match "
+						+ "to the actual length of the payload. The payload given in the DoIP header is " + payloadLength + ", "
+								+ "but the actual length of the payload is " + (dataLength - 8) + ".");
+				throw new InvalidPayloadLength();
+			}
+			logger.debug("Payload length of DoIP message is correct.");
+		} finally {
+			logger.trace("<<< void checkPayloadLength(long expectedLength, long payloadLength, long dataLength)");
 		}
-		logger.trace("<<< void checkPayloadLength(long expectedLength, long payloadLength, long dataLength)");
+	}
+	
+	private static void checkPayloadLength_0x0004_VAM(long payloadLength, long dataLength) throws InvalidPayloadLength {
+		try {
+			logger.trace(">>> void checkPayloadLength_0x0004_VAM(long payloadLength, long dataLength)");
+			if ((payloadLength != 32) && (payloadLength != 33)) {
+				logger.warn("The payload length given in the DoIP header of the vehicle announcement message (0x0004) is invalid. "
+						+ "It should be 32 or 33, but it is " + payloadLength + ".");
+				throw new InvalidPayloadLength();
+			}
+			
+			if (payloadLength != (dataLength - 8)) {
+				logger.warn("The payload length given in the DoIP header of the vehicle announcement message (0x0004) does not match "
+						+ "to the actual length of the payload. The payload given in the DoIP header is " + payloadLength + ", "
+								+ "but the actual length of the payload is " + (dataLength - 8) + ".");
+				throw new InvalidPayloadLength();
+			}
+			logger.debug("Payload length of the vehicle announcement message (0x0004) is correct.");
+		} finally {
+			logger.trace("<<< void checkPayloadLength_0x0004_VAM(long payloadLength, long dataLength)");
+		}
 	}
 }

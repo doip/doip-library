@@ -410,9 +410,11 @@ public class DoipUdpMessageHandler implements UdpReceiverListener {
 					">>> public void onDoipUdpEntityStatusRequest(DoipUdpEntityStatusRequest doipMessage, DatagramPacket packet)");
 		}
 
+		logger.debug("Number of listeners = " + this.listeners.size());
 		Iterator<DoipUdpMessageHandlerListener> iter = this.listeners.iterator();
 		while (iter.hasNext()) {
 			DoipUdpMessageHandlerListener listener = iter.next();
+			logger.debug("Calling listener on address " + listener.toString());
 			listener.onDoipUdpEntityStatusRequest(doipMessage, packet);
 		}
 
@@ -496,7 +498,6 @@ public class DoipUdpMessageHandler implements UdpReceiverListener {
 		if (logger.isTraceEnabled()) {
 			logger.trace("<<< public void onHdeaderTooShort(DatagramPacket packet)");
 		}
-
 	}
 
 	public void onInvalidPayloadLength(DatagramPacket packet) {

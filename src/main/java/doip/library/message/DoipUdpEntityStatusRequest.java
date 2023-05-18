@@ -17,10 +17,18 @@ public class DoipUdpEntityStatusRequest extends DoipUdpMessage {
 		logger.log(level, "DoIP entity status request.");
 		logger.log(level, "----------------------------------------");
 	}
+	
+	public String getMessageName() {
+		return getPayloadTypeAsString(DoipMessage.TYPE_UDP_ENTITY_STATUS_REQ);
+	}
+
+	public static String getMessageNameOfClass() {
+		return getPayloadTypeAsString(DoipMessage.TYPE_UDP_ENTITY_STATUS_REQ);
+	}
 
 	@Override
 	public byte[] getMessage() {
-		byte[] msg = new byte[] {0x02, (byte) 0xFD, 0x40, 0x01, 0x00, 0x00, 0x00, 0x00};
+		byte[] msg = new byte[] {0x03, (byte) 0xFC, 0x40, 0x01, 0x00, 0x00, 0x00, 0x00};
 		return msg;
 	}
 

@@ -23,6 +23,15 @@ public class DoipUdpVehicleIdentRequestWithVin extends DoipUdpMessage {
 		logger.log(level, "    VIN = " + Conversion.byteArrayToHexString(this.vin));
 		logger.log(level, "----------------------------------------");
 	}
+	
+	public String getMessageName() {
+		return getPayloadTypeAsString(DoipMessage.TYPE_UDP_VIR_VIN);
+	}
+	
+	public static String getMessageNameOfClass() {
+		return getPayloadTypeAsString(DoipMessage.TYPE_UDP_VIR_VIN);
+	}
+
 	@Override
 	public byte[] getMessage() {
 		byte[] msg = new byte[25];

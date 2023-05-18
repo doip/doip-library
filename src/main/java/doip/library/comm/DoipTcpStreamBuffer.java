@@ -5,6 +5,8 @@ import java.util.LinkedList;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.Marker;
+import org.apache.logging.log4j.MarkerManager;
 
 import doip.library.message.DoipMessage;
 import doip.library.util.StreamBuffer;
@@ -21,10 +23,10 @@ import doip.library.util.StreamBuffer;
  */
 public class DoipTcpStreamBuffer extends StreamBuffer {
 
-	/**
-	 * log4j2 logger
-	 */
+	/** Log4j2 logger */
 	private static Logger logger = LogManager.getLogger(DoipTcpStreamBuffer.class);
+	private static Marker enter = MarkerManager.getMarker("ENTER");
+	private static Marker exit = MarkerManager.getMarker("EXIT");
 
 	public static final int STATE_HEADER_NOT_COMPLETED = 1;
 
@@ -60,9 +62,9 @@ public class DoipTcpStreamBuffer extends StreamBuffer {
 	private int state = STATE_HEADER_NOT_COMPLETED;
 
 	public void addListener(DoipTcpStreamBufferListener listener) {
-		logger.trace(">>> public void addListener(DoipStreamBufferListener listener)");
+		logger.trace(enter, ">>> public void addListener(DoipStreamBufferListener listener)");
 		this.listeners.add(listener);
-		logger.trace("<<< public void addListener(DoipStreamBufferListener listener)");
+		logger.trace(exit, "<<< public void addListener(DoipStreamBufferListener listener)");
 	}
 
 	/**
@@ -70,7 +72,7 @@ public class DoipTcpStreamBuffer extends StreamBuffer {
 	 * the buffer.
 	 */
 	public void append(byte[] newData) {
-		logger.trace(">>> void append(byte[] newData)");
+		logger.trace(enter, ">>> void append(byte[] newData)");
 
 		logger.debug("Append " + newData.length + " bytes to the buffer");
 		super.append(newData);
@@ -80,7 +82,7 @@ public class DoipTcpStreamBuffer extends StreamBuffer {
 					+ " bytes in the buffer which needs to get processed. Calling processBuffer() again.");
 			ret = this.processBuffer();
 		}
-		logger.trace("<<< void append(byte[] newData)");
+		logger.trace(exit, "<<< void append(byte[] newData)");
 	}
 
 	/**
@@ -91,18 +93,21 @@ public class DoipTcpStreamBuffer extends StreamBuffer {
 	 *         payload types for UDP messages will also be declared as invalid
 	 *         payload type.
 	 */
-	public boolean checkPayloadType(int payloadType) {
+	public static boolean isValidTcpPayloadType(int payloadType) {
+		logger.trace(enter, ">>> public boolean checkPayloadType(int payloadType)");
+		boolean ret = false;
 		if (payloadType == 0x0000 || payloadType == 0x0005 || payloadType == 0x0006 || payloadType == 0x0007
 				|| payloadType == 0x0008 || payloadType == 0x8001 || payloadType == 0x8002 || payloadType == 0x8003) {
-			return true;
+			ret = true;
 		}
-		return false;
+		logger.trace(enter, ">>> public boolean checkPayloadType(int payloadType)");
+		return ret;
 	}
 
 	/**
 	 * This function will check if the payload length is correct.
 	 * 
-	 * @return Returns true if the payload is correct for the specific payload type.
+	 * @return Returns true if the payload length is correct for the specific payload type.
 	 */
 	public boolean checkPayloadTypeSpecificLength() {
 		logger.trace(">>> boolean checkPayloadTypeSpecificLength()");
@@ -155,7 +160,7 @@ public class DoipTcpStreamBuffer extends StreamBuffer {
 	 * @param data The data which will be checked.
 	 * @return Returns true if the first two bytes contain a valid sync pattern
 	 */
-	public boolean checkSyncPattern(byte[] data) {
+	public static boolean checkSyncPattern(byte[] data) {
 		logger.trace(">>> boolean checkSyncPattern(byte[] data)");
 		int protocolVersion = data[0] & 0xFF;
 		int inverseProtocolVersion = data[1] & 0xFF;
@@ -223,7 +228,7 @@ public class DoipTcpStreamBuffer extends StreamBuffer {
 		this.payloadLength = (highhigh << 24) | (highlow << 16) | (lowhigh << 8) | lowlow;
 		logger.debug("\tPayload Length in Header = " + payloadLength);
 
-		if (checkPayloadType(payloadType) == false) {
+		if (isValidTcpPayloadType(payloadType) == false) {
 			logger.warn("Invalid payload type");
 			this.onHeaderUnknownPayloadType();
 			this.state = STATE_SHREDDER_NOT_COMPLETED;

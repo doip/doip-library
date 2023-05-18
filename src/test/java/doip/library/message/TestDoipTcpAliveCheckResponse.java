@@ -12,7 +12,7 @@ public class TestDoipTcpAliveCheckResponse {
 	public void test() {
 		DoipTcpAliveCheckResponse msg = new DoipTcpAliveCheckResponse(0x1234);
 		String hexString = Conversion.byteArrayToHexString(msg.getMessage());
-		assertEquals("02 FD 00 08 00 00 00 02 12 34", hexString);
+		assertEquals("03 FC 00 08 00 00 00 02 12 34", hexString);
 	}
 
 }
