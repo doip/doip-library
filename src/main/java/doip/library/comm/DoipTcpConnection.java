@@ -265,6 +265,21 @@ public class DoipTcpConnection implements DoipTcpStreamBufferListener, TcpReceiv
 		}
 	}
 	
+	/**
+	 * This function can be overridden to implement some special handling
+	 * of the DoIP message. The parser will provide the DoIP header, the
+	 * payload type and the data in the payload. At first this method here will
+	 * be called, where you can implement some special handling. When you
+	 * return true, then no further processing of the data will be done. If
+	 * you return false, then the normal processing of the DoIP message will be
+	 * done. The normal handling will be done in the function 
+	 * processDataByStandardHandler.y
+	 * @see processDataByStandardHandler 
+	 * @param header
+	 * @param payloadType
+	 * @param payload
+	 * @return
+	 */
 	public boolean processDataByCustomHandler(byte[] header, int payloadType, byte[] payload) {
 		return false;
 	}
@@ -316,6 +331,11 @@ public class DoipTcpConnection implements DoipTcpStreamBufferListener, TcpReceiv
 	}
 	
 
+	/**
+	 * The function will call for all listeners the function 
+	 * @see onDoipTcpDiagnosticMessage
+	 * @param doipTcpDiagnosticMessage
+	 */
 	public void processDoipTcpDiagnosticMessage(DoipTcpDiagnosticMessage doipTcpDiagnosticMessage) {
 		String function = "void processDoipTcpDiagnosticMessage(DoipTcpDiagnosticMessage doipTcpDiagnosticMessage)";
 		logger.trace(">>> " + function);

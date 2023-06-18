@@ -25,6 +25,7 @@ public class TimerThread extends Timer implements Runnable {
 	
 	public void stop() {
 		this.runFlag = false;
+		this.thread.interrupt();
 		try {
 			this.thread.join();
 		} catch (InterruptedException e) {

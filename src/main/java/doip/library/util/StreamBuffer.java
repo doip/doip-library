@@ -5,6 +5,11 @@ import java.util.Arrays;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+/**
+ * Implements a byte array buffer where data can be added at the end
+ * and can be removed from the beginning. All methods are thread-safe
+ * by declaring them with keyword "synchronized".
+ */
 public class StreamBuffer {
 	
 	private Logger logger = LogManager.getLogger(StreamBuffer.class);
