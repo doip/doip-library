@@ -19,6 +19,15 @@ public class DoipTcpAliveCheckResponse extends DoipTcpMessage {
 			log(Level.INFO);
 		}
 	}
+
+	public int getSourceAddress() {
+		return sourceAddress;
+	}
+
+	public void setSourceAddress(int sourceAddress) {
+		this.sourceAddress = sourceAddress;
+	}
+
 	
 	public String getMessageName() {
 		return getPayloadTypeAsString(DoipMessage.TYPE_TCP_ALIVE_RES);

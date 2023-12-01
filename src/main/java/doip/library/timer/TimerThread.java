@@ -5,7 +5,11 @@ public class TimerThread extends Timer implements Runnable {
 	private volatile Thread thread = null;
 	private volatile long cycleTime = 1; // cycle time = 1 ms
 	
+	private volatile int precision = 10000;
+	
 	private volatile boolean runFlag = false;
+	
+	private volatile boolean resetFlag = false;
 	
 	/**
 	 * The number of cycles the time shall perform, for example if
@@ -14,6 +18,10 @@ public class TimerThread extends Timer implements Runnable {
 	 * running endless.
 	 */
 	private volatile int numberOfCycles = 0;
+	
+	public void setPrecision(int precision) {
+		this.precision = precision;
+	}
 	
 	public void start(long cycleTime, int numberOfCycles) {
 		this.cycleTime = cycleTime;
@@ -35,6 +43,10 @@ public class TimerThread extends Timer implements Runnable {
 	public boolean isAlive() {
 		return this.thread.isAlive();
 	}
+	
+	public void reset() {
+		this.resetFlag = true;
+	}
 
 	@Override
 	public void run() {
@@ -43,6 +55,7 @@ public class TimerThread extends Timer implements Runnable {
 		while (runFlag) {
 			long currentTime = System.nanoTime();
 			if (nextTime < currentTime) {
+				// Timer expired
 				nextTime += (cycleTime * 1000000);
 				this.onTimerExpired();
 				count ++;
@@ -52,8 +65,13 @@ public class TimerThread extends Timer implements Runnable {
 					}
 				}
 			}
+			if (resetFlag == true) {
+				nextTime = System.nanoTime() + (cycleTime * 1000000);
+				count = 0;
+				resetFlag = false;
+			}
 			try {
-				Thread.sleep(0, 1000); // Wait 1 microsecond
+				Thread.sleep(0, precision);
 			} catch (InterruptedException e) {
 			}
 		}

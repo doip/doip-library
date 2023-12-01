@@ -3,7 +3,7 @@ package doip.library.timer;
 
 import org.junit.jupiter.api.Test;
 
-import doip.junit.Assertions;
+import com.starcode88.jtest.Assertions;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

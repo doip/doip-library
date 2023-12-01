@@ -7,7 +7,16 @@ import java.net.MulticastSocket;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.Marker;
+import org.apache.logging.log4j.MarkerManager;
+
 public class Helper {
+	
+	static Logger logger =LogManager.getLogger(Helper.class);
+	
+	static Marker markerUml = MarkerManager.getMarker("UML");
 
 	/**
 	 * Returns the path of am file. The returned string has always a '/' at the end.

@@ -4,6 +4,7 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import doip.library.exception.IllegalNullArgument;
 import doip.library.util.Conversion;
 
 public class DoipUdpVehicleAnnouncementMessage extends DoipUdpMessage {
@@ -16,9 +17,14 @@ public class DoipUdpVehicleAnnouncementMessage extends DoipUdpMessage {
 	private byte[] gid = new byte[6];
 	private int furtherActionRequired = 0;
 	private int syncStatus = 0;
-
+	
 	public DoipUdpVehicleAnnouncementMessage(byte[] vin, int logicalAddress, byte[] eid, byte[] gid,
 			int furtherActionRequired, int syncStatus) {
+		String method = "public DoipUdpVehicleAnnouncementMessage(byte[] vin, int logicalAddress, byte[] eid, byte[] gid, int furtherActionRequired, int syncStatus)";
+		if (vin == null) throw logger.throwing(new IllegalNullArgument("vin", method)); 
+		if (eid == null) throw logger.throwing(new IllegalNullArgument("eid", method)); 
+		if (gid == null) throw logger.throwing(new IllegalNullArgument("gid", method)); 
+		
 		this.vin = vin;
 		this.logicalAddress = logicalAddress;
 		this.eid = eid;

@@ -4,11 +4,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
 import java.util.Arrays;
+import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.MarkerManager;
+import org.apache.logging.log4j.ThreadContext;
 
 import doip.library.util.Conversion;
 import doip.library.util.Helper;
@@ -121,6 +123,13 @@ public class TcpReceiverThread extends TcpReceiver implements Runnable {
 	 */
 	@Override
 	public void run() {
+		Map<String, String> context = getContext();
+		if (context != null) {
+			for (Map.Entry<String, String> entry : context.entrySet()) {
+				ThreadContext.put(entry.getKey(), entry.getValue());
+			}
+		}
+		
 		logger.trace(enter, ">>> void run()");
 
 		try {
@@ -128,7 +137,8 @@ public class TcpReceiverThread extends TcpReceiver implements Runnable {
 			InputStream inputStream = this.socket.getInputStream();
 			for (;;) {
 				logger.debug("Read data from socket input stream (blocking read) ...");
-				int count = inputStream.read(data);
+				int count = 0;
+				count = inputStream.read(data);
 	
 				if (count <= 0) {
 					if (this.socket.isConnected())

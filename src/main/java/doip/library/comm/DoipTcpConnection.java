@@ -5,6 +5,8 @@ import java.io.OutputStream;
 import java.net.Socket;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -85,12 +87,18 @@ public class DoipTcpConnection implements DoipTcpStreamBufferListener, TcpReceiv
 	 * messages.
 	 */
 	private LinkedList<DoipTcpConnectionListener> listeners = new LinkedList<DoipTcpConnectionListener>();
+	
+	private Map<String, String> context = null;
 
 	public DoipTcpConnection(String tcpReceiverThreadName, int maxByteArraySizeLogging) {
 		this.maxByteArraySizeLogging = maxByteArraySizeLogging;
 		this.streamBuffer = new DoipTcpStreamBuffer();
 		this.tcpReceiverThread = new TcpReceiverThread(tcpReceiverThreadName, maxByteArraySizeLogging);
 		streamBuffer.addListener(this);
+	}
+	
+	public void setContext(Map<String, String> context) {
+		this.context = context;
 	}
 
 	/**
@@ -104,8 +112,14 @@ public class DoipTcpConnection implements DoipTcpStreamBufferListener, TcpReceiv
 			logger.trace(">>> public void start(Socket socket)");
 		}
 		this.socket = socket;
+		this.tcpReceiverThread.setContext(this.context);
 		this.tcpReceiverThread.addListener(this);
-		this.tcpReceiverThread.start(socket);
+		try {
+			//PlantUml.logCall(this, this.tcpReceiverThread, "start(socket)");
+			this.tcpReceiverThread.start(socket);
+		} finally {
+			//PlantUml.logReturn(this, this.tcpReceiverThread);
+		}
 		if (logger.isTraceEnabled()) {
 			logger.trace("<<< public void start(Socket socket)");
 		}
@@ -118,8 +132,9 @@ public class DoipTcpConnection implements DoipTcpStreamBufferListener, TcpReceiv
 		if (logger.isTraceEnabled()) {
 			logger.trace(">>> public void stop()");
 		}
+		//PlantUml.logCall(this, this.tcpReceiverThread, "stop()");
 		this.tcpReceiverThread.stop();
-		
+		//PlantUml.logReturn(this, this.tcpReceiverThread);
 		/* Give the thread some time to terminate and call the listeners.
 		 * The thread will call the function "onSocketClosed(...)".
 		 * If it is too fast then function removeListener will remove listener
@@ -133,6 +148,13 @@ public class DoipTcpConnection implements DoipTcpStreamBufferListener, TcpReceiv
 		if (logger.isTraceEnabled()) {
 			logger.trace("<<< public void stop()");
 		}
+	}
+	
+	public LinkedList<DoipTcpConnectionListener> getCopyOfListeners() {
+		LinkedList<DoipTcpConnectionListener> copy =
+				new LinkedList<DoipTcpConnectionListener>();
+		copy.addAll(listeners);
+		return copy;
 	}
 
 	public void send(DoipMessage doipMessage) {
@@ -343,7 +365,7 @@ public class DoipTcpConnection implements DoipTcpStreamBufferListener, TcpReceiv
 		Iterator<DoipTcpConnectionListener> iter = this.listeners.iterator();
 		while (iter.hasNext()) {
 			DoipTcpConnectionListener listener = iter.next();
-			listener.onDoipTcpDiagnosticMessage(this, doipTcpDiagnosticMessage);
+				listener.onDoipTcpDiagnosticMessage(this, doipTcpDiagnosticMessage);
 		}
 
 		logger.trace("<<< " + function);
@@ -418,34 +440,33 @@ public class DoipTcpConnection implements DoipTcpStreamBufferListener, TcpReceiv
 
 	/**
 	 * Will be called when a alive check response had been received.
+	 * The function just call the function onDoipTcpAliveCheckResponse(...)
+	 * in all listeners.
 	 * 
 	 * @param doipTcpAliveCheckResponse
 	 */
 	public void processDoipTcpAliveCheckResponse(DoipTcpAliveCheckResponse doipTcpAliveCheckResponse) {
 		String function = "void processDoipTcpAliveCheckResponse(DoipTcpAliveCheckResponse doipTcpAliveCheckResponse)";
-		logger.trace(">>> " + function);
-
-		Iterator<DoipTcpConnectionListener> iter = this.listeners.iterator();
-		while (iter.hasNext()) {
-			DoipTcpConnectionListener listener = iter.next();
-			listener.onDoipTcpAliveCheckResponse(this, doipTcpAliveCheckResponse);
+		try {
+			logger.trace(">>> " + function);
+			List<DoipTcpConnectionListener> copyOfCurrentListeners = getCopyOfListeners();
+			for (DoipTcpConnectionListener listener : copyOfCurrentListeners) {
+				listener.onDoipTcpAliveCheckResponse(this, doipTcpAliveCheckResponse);
+			}
+		} finally {
+			logger.trace("<<< " + function);
 		}
-
-		logger.trace("<<< " + function);
 	}
 
 	public void processDoipTcpHeaderNegAck(DoipTcpHeaderNegAck doipTcpHeaderNegAck) {
-		if (logger.isTraceEnabled()) {
+		try {
 			logger.trace(">>> void processDoipHeaderNegAck(DoipHeaderNegAck doipHeaderNegAck)");
-		}
-
-		Iterator<DoipTcpConnectionListener> iter = this.listeners.iterator();
-		while (iter.hasNext()) {
-			DoipTcpConnectionListener listener = iter.next();
-			listener.onDoipTcpHeaderNegAck(this, doipTcpHeaderNegAck);
-		}
-
-		if (logger.isTraceEnabled()) {
+		
+			List<DoipTcpConnectionListener> copyOfCurrentListeners = getCopyOfListeners();
+			for (DoipTcpConnectionListener listener : copyOfCurrentListeners) {
+				listener.onDoipTcpHeaderNegAck(this, doipTcpHeaderNegAck);
+			}
+		} finally {
 			logger.trace("<<< void processDoipHeaderNegAck(DoipHeaderNegAck doipHeaderNegAck)");
 		}
 	}
@@ -453,22 +474,21 @@ public class DoipTcpConnection implements DoipTcpStreamBufferListener, TcpReceiv
 	@Override
 	public void onSocketClosed() {
 		logger.trace(">>> public void onSocketClosed()");
+		List<DoipTcpConnectionListener> copyOfCurrentListeners = this.getCopyOfListeners();
 		logger.debug("Number of listeners: " + this.listeners.size());
-		Iterator<DoipTcpConnectionListener> iter = this.listeners.iterator();
-		while (iter.hasNext()) {
-			DoipTcpConnectionListener listener = iter.next();
+		for (DoipTcpConnectionListener listener : copyOfCurrentListeners) {
 			listener.onConnectionClosed(this);
 		}
 		logger.trace("<<< public void onSocketClosed()");
 	}
 
-	public void addListener(DoipTcpConnectionListener listener) {
+	public final void addListener(DoipTcpConnectionListener listener) {
 		logger.trace(">>> void addListener(DoipTcpConnectionListener listener)");
 		this.listeners.add(listener);
 		logger.trace("<<< void addListener(DoipTcpConnectionListener listener)");
 	}
 
-	public void removeListener(DoipTcpConnectionListener listener) {
+	public final void removeListener(DoipTcpConnectionListener listener) {
 		logger.trace(">>> void removeListener(DoipTcpConnectionListener listener)");
 		this.listeners.remove(listener);
 		logger.trace("<<< void removeListener(DoipTcpConnectionListener listener)");

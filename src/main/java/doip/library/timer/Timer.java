@@ -9,11 +9,11 @@ public abstract class Timer {
 	
 	private LinkedList<TimerListener> listeners = new LinkedList<TimerListener>();
 	
-	public void addListener(TimerListener listener) {
+	public synchronized void addListener(TimerListener listener) {
 		this.listeners.add(listener);
 	}
 	
-	public void removeListener(TimerListener listener) {
+	public synchronized void removeListener(TimerListener listener) {
 		this.listeners.remove(listener);
 	}
 	

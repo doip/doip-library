@@ -13,8 +13,8 @@ public class EmptyPropertyValue extends Exception {
 	 * Constructor with the key which was empty.
 	 * @param key The k ey which was empty
 	 */
-	public EmptyPropertyValue(String key) {
-		super(key);
+	public EmptyPropertyValue(String key, String filename) {
+		super("The  property \"" +key+"\" in file \"" + filename + "\" is empty");
 	}
 
 }

@@ -48,7 +48,7 @@ public class DoipTcpRoutingActivationResponse extends DoipTcpMessage {
 		case 0x06:
 			return "0x06 (routing activation denied due to unsupported routing activation type)";
 		case 0x10:
-			return "0x10 (routing successfull activated)";
+			return "0x10 (routing successful activated)";
 		case 0x11:
 			return "0x11 (routing will be activated; confirmation required)";
 		default:

@@ -2,12 +2,12 @@ package doip.library.net;
 
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.MarkerManager;
-
 
 /**
  *  Implements functions to handle events from a TCP socket.
@@ -19,7 +19,15 @@ public class TcpReceiver {
 	private static Marker enter = MarkerManager.getMarker("ENTER");
 	private static Marker exit = MarkerManager.getMarker("EXIT");
 	
-	LinkedList<TcpReceiverListener> listeners = new LinkedList<TcpReceiverListener>();
+	private LinkedList<TcpReceiverListener> listeners = new LinkedList<TcpReceiverListener>();
+	
+	/**
+	 * This map contains key/value pairs which are used to set the
+	 * ThreadContext for Log4j. The ThreadContext will be set
+	 * at the beginning of the method "run" which will be called by
+	 * the JRE.
+	 */
+	private Map<String, String> context = null;
 
 	/**
 	 * Adds a listener to this class
@@ -42,15 +50,30 @@ public class TcpReceiver {
 	}
 	
 	/**
+	 * Getter for the field "context"
+	 * @return Returns the field "context"
+	 */
+	public Map<String, String> getContext() {
+		return this.context;
+	}
+	
+	/**
+	 * Sets the field "context"
+	 *
+	 * @param  context  A map containing key-value pairs representing the context
+	 */
+	public void setContext(Map<String, String> context) {
+		this.context = context;
+	}
+	
+	/**
 	 * Will be called when data has been received from the TCP socket.
 	 * It informs all listeners that new data has been received.
 	 * @param data The data which had been received
 	 */
 	public void onDataReceived(byte[] data) {
 		logger.trace(enter, ">>> void onDataReceived(byte[] data)");
-		Iterator<TcpReceiverListener> iter = this.listeners.iterator();
-		while (iter.hasNext()) {
-			TcpReceiverListener listener = iter.next();
+		for (TcpReceiverListener listener : this.listeners) {
 			listener.onDataReceived(data);
 		}
 		logger.trace(exit, "<<< void onDataReceived(byte[] data)");

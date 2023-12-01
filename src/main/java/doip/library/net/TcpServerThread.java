@@ -3,19 +3,33 @@ package doip.library.net;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.Marker;
+import org.apache.logging.log4j.MarkerManager;
+import org.apache.logging.log4j.ThreadContext;
 
 import doip.library.util.Helper;
 
 /**
  * Implements a TCP Server as a thread which is listening for 
  * incoming connections.
+ * 
+ * @author Marco Wehnert
+ * 
  */
 public class TcpServerThread extends TcpServer implements Runnable {
 
+	/** Log4j logger */
 	private static Logger logger = LogManager.getLogger(TcpServerThread.class);
+
+	/** Log4j marker for function entry */
+	private static Marker enter = MarkerManager.getMarker("ENTER");
+	
+	/** Log4j marker for function exit */
+	private static Marker exit = MarkerManager.getMarker("EXIT'");
 
 	private volatile Thread thread = null;
 
@@ -83,7 +97,14 @@ public class TcpServerThread extends TcpServer implements Runnable {
 	 */
 	@Override
 	public void run() {
-		logger.trace(">>> void run()");
+		Map<String, String> context = getContext();
+		if (context != null) {
+			for (Map.Entry<String, String> entry : context.entrySet()) {
+				ThreadContext.put(entry.getKey(), entry.getValue());
+			}
+		}		
+
+		logger.trace(enter, ">>> void run()");
 		try {
 			for (;;) {
 				Socket connectionSocket = this.socket.accept();
@@ -93,7 +114,7 @@ public class TcpServerThread extends TcpServer implements Runnable {
 		} catch (IOException e) {
 			logger.debug(Helper.getExceptionAsString(e));
 		}
-		logger.trace("<<< void run()");
+		logger.trace(exit, "<<< void run()");
 	}
 
 	public ServerSocket getSocket() {

@@ -1,6 +1,6 @@
 package doip.library.util;
 
-import static doip.junit.Assertions.*;
+import static com.starcode88.jtest.Assertions.*;
 
 import java.util.LinkedList;
 import java.util.List;

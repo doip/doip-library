@@ -4,6 +4,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -17,6 +18,12 @@ public abstract class UdpReceiver {
 	private Logger logger = LogManager.getLogger(UdpReceiver.class);
 
 	private LinkedList<UdpReceiverListener> listeners = new LinkedList<UdpReceiverListener>();
+	
+	private Map<String, String> context = null;
+	
+	public void setContext(Map<String, String> context) {
+		this.context = context;
+	}
 
 	/**
 	 * Adds a listener 

@@ -17,7 +17,8 @@ dependencies {
 	implementation group: 'org.apache.logging.log4j', name: 'log4j-api',        version: '2.19.0'
 	implementation group: 'org.apache.logging.log4j', name: 'log4j-core',       version: '2.19.0'
 
-	testImplementation 'com.github.doip:doip-junit:2.0.0'
+	implementation 'com.github.starcode88:starcode88-jutils:1.0.0'
+	testImplementation 'com.github.starcode88:starcode88-jtest:1.2.0'
 	testImplementation 'org.junit.jupiter:junit-jupiter:5.7.1'
 }
 

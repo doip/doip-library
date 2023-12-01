@@ -13,8 +13,8 @@ public class MissingProperty extends Exception {
 	 * Constructor with the key
 	 * @param key The key which was expected to exist in the property file.
 	 */
-	public MissingProperty(String key) {
-		super("The  property \"" +key+"\" is missing");
+	public MissingProperty(String key, String filename) {
+		super("The  property \"" +key+"\" in file \"" + filename + "\" is missing");
 	}
 
 }

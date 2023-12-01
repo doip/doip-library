@@ -127,13 +127,13 @@ public class LookupTable {
 	 * Resolves references from a hex string to another hex string. These 
 	 * references are in the response and are declared within two brackets '[' and ']'.
 	 * The response is referencing bytes from the request. for example the request is
-	 * "01 FF AB 07" and the response is "02 00 [1] AA BB" the interpration is that
+	 * "01 FF AB 07" and the response is "02 00 [1] AA BB" the interpretation is that
 	 * the response is 5 bytes long and byte 3 shall have the value from byte with index 1 (index begins at 0) 
 	 * in the request.
 	 * So the final result is "02 00 FF AA BB"
 	 * @param request The request message as a hex string
 	 * @param response The response message as a hex string which might contain references to
-	 * bytes in the response by using brackets, for example "[1]".
+	 * bytes in the request by using brackets, for example "[1]".
 	 * @return The response hex string with resolved references.
 	 */
 	public String resolveReferences(String request, String response) {

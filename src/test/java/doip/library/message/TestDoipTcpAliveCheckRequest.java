@@ -1,6 +1,6 @@
 package doip.library.message;
 
-import static doip.junit.Assertions.*;
+import static com.starcode88.jtest.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 

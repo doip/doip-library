@@ -7,6 +7,7 @@ import java.net.InetAddress;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -45,6 +46,8 @@ public class DoipUdpMessageHandler implements UdpReceiverListener {
 	private UdpReceiverThread udpReceiverThread = null;
 
 	private LinkedList<DoipUdpMessageHandlerListener> listeners = new LinkedList<DoipUdpMessageHandlerListener>();
+	
+	private Map<String, String> context = null;
 
 	private LookupTable lookupTable = null;
 
@@ -52,8 +55,12 @@ public class DoipUdpMessageHandler implements UdpReceiverListener {
 		this.udpReceiverThreadName = udpReceiverThreadName;
 		this.lookupTable = lookupTable;
 	}
+	
+	public void setContext(Map<String, String> context) {
+		this.context = context;
+	}
 
-	public void addListener(DoipUdpMessageHandlerListener listener) {
+	public final void addListener(DoipUdpMessageHandlerListener listener) {
 		if (logger.isTraceEnabled()) {
 			logger.trace(">>> public void addListener(DoipUdpInterpreterListener listener)");
 		}
@@ -65,7 +72,7 @@ public class DoipUdpMessageHandler implements UdpReceiverListener {
 		}
 	}
 
-	public void removeListener(DoipUdpMessageHandlerListener listener) {
+	public final void removeListener(DoipUdpMessageHandlerListener listener) {
 		if (logger.isTraceEnabled()) {
 			logger.trace(">>> public void removeListener(DoipUdpInterpreterListener listener)");
 		}
@@ -82,6 +89,7 @@ public class DoipUdpMessageHandler implements UdpReceiverListener {
 
 		this.socket = socket;
 		this.udpReceiverThread = new UdpReceiverThread(udpReceiverThreadName);
+		this.udpReceiverThread.setContext(context);
 		this.udpReceiverThread.addListener(this);
 		this.udpReceiverThread.start(this.socket);
 
