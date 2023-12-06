@@ -1,12 +1,11 @@
 package doip.library.exception;
 
-@SuppressWarnings("serial")
 public class IncorrectPatternFormat extends DoipException {
+
+	private static final long serialVersionUID = 2164899921754503791L;
 
 	public IncorrectPatternFormat(String string) {
 		super(string);
 	}
 
-	public IncorrectPatternFormat() {
-	}
 }

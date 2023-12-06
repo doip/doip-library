@@ -89,7 +89,7 @@ public class Conversion {
 		try {
 			string = new String(bytes, "US-ASCII");
 		} catch (UnsupportedEncodingException e) {
-			throw new UnsupportedEncoding();
+			throw new UnsupportedEncoding(e);
 		}
 		return string;
 	}

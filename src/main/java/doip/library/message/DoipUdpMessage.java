@@ -34,7 +34,15 @@ public abstract class DoipUdpMessage extends DoipMessage {
 
 		if (xorProtocolVersion != inverseProtocolVersion) {
 			logger.trace("<<< DoipMessage parseUDP(byte[] data) return with IncorrectPatternFormat");
-			throw new IncorrectPatternFormat();
+			String text = "The inverse protocol version (second byte of a"
+					+ " DoIP message) doesn't match the protocol version"
+					+ " (first byte of a DoIP message) XOR 0xFF;"
+					+ " protocol version = "
+					+ String.format("0x%02X", protocolVersion)
+					+ ", inverse protocol version = "
+					+ String.format("0x%02X", inverseProtocolVersion)
+					+ ".";
+			throw new IncorrectPatternFormat(text);
 		}
 
 		int high = data[2] & 0xFF;
@@ -178,7 +186,8 @@ public abstract class DoipUdpMessage extends DoipMessage {
 			return new DoipUdpDiagnosticPowerModeResponse(diagPowerMode);
 		default:
 			logger.trace("<<< DoipMessage parseUDP(byte[] data) return with InvalidPayloadType");
-			throw new InvalidPayloadType();
+			text = "The payload type " + String.format("0x%02X", payloadType) + " doesn't have a valid value";
+			throw new InvalidPayloadType(text);
 		}
 	}
 
@@ -197,16 +206,18 @@ public abstract class DoipUdpMessage extends DoipMessage {
 			logger.trace(">>> void checkPayloadLength(long expectedLength, long payloadLength, long dataLength)");
 			
 			if (payloadLength != expectedLength) {
-				logger.warn("The payload length given in the DoIP header is invalid. " +
-						"It should be " + expectedLength + ", but it is " + payloadLength + ".");
-				throw new InvalidPayloadLength();
+				String text = "The payload length given in the DoIP header is invalid. " +
+						"It should be " + expectedLength + ", but it is " + payloadLength + ".";
+				logger.warn(text);
+				throw new InvalidPayloadLength(text);
 			}
 			logger.debug("\tExpected Payload Length  = " + expectedLength);
 			if (payloadLength != (dataLength - 8)) {
-				logger.warn("The payload length given in the DoIP header does not match "
+				String text = "The payload length given in the DoIP header does not match "
 						+ "to the actual length of the payload. The payload given in the DoIP header is " + payloadLength + ", "
-								+ "but the actual length of the payload is " + (dataLength - 8) + ".");
-				throw new InvalidPayloadLength();
+								+ "but the actual length of the payload is " + (dataLength - 8) + ".";
+				logger.warn(text);
+				throw new InvalidPayloadLength(text);
 			}
 			logger.debug("Payload length of DoIP message is correct.");
 		} finally {
@@ -218,16 +229,18 @@ public abstract class DoipUdpMessage extends DoipMessage {
 		try {
 			logger.trace(">>> void checkPayloadLength_0x0004_VAM(long payloadLength, long dataLength)");
 			if ((payloadLength != 32) && (payloadLength != 33)) {
-				logger.warn("The payload length given in the DoIP header of the vehicle announcement message (0x0004) is invalid. "
-						+ "It should be 32 or 33, but it is " + payloadLength + ".");
-				throw new InvalidPayloadLength();
+				String text = "The payload length given in the DoIP header of the vehicle announcement message (0x0004) is invalid. "
+						+ "It should be 32 or 33, but it is " + payloadLength + ".";
+				logger.warn(text);
+				throw new InvalidPayloadLength(text);
 			}
 			
 			if (payloadLength != (dataLength - 8)) {
-				logger.warn("The payload length given in the DoIP header of the vehicle announcement message (0x0004) does not match "
+				String text = "The payload length given in the DoIP header of the vehicle announcement message (0x0004) does not match "
 						+ "to the actual length of the payload. The payload given in the DoIP header is " + payloadLength + ", "
-								+ "but the actual length of the payload is " + (dataLength - 8) + ".");
-				throw new InvalidPayloadLength();
+								+ "but the actual length of the payload is " + (dataLength - 8) + ".";
+				logger.warn(text);
+				throw new InvalidPayloadLength(text);
 			}
 			logger.debug("Payload length of the vehicle announcement message (0x0004) is correct.");
 		} finally {

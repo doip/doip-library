@@ -1,13 +1,10 @@
 package doip.library.exception;
 
-@SuppressWarnings("serial")
 public class InvalidPayloadLength extends DoipException {
 
-	public InvalidPayloadLength() {
-	}
+	private static final long serialVersionUID = -5986676154030113093L;
 
 	public InvalidPayloadLength(String string) {
 		super(string);
 	}
-
 }
