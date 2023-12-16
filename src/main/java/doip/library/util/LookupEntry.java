@@ -20,6 +20,19 @@ public class LookupEntry {
 	}
 	
 	/**
+	 * Copy coonstructor which creates a deep copy of the argument source
+	 * @param source
+	 */
+	public LookupEntry(LookupEntry source) {
+		this.regex = source.getRegex();
+		this.result = source.getResult();
+		for (LookupEntry modifier : source.getModifiers()) {
+			LookupEntry copy = new LookupEntry(modifier);
+			this.modifiers.add(copy);
+		}
+	}
+	
+	/**
 	 * Setup a lookup entry by a given string. The string shall contain two strings 
 	 * separated by a colon character (=":"). All white spaces will be removed before
 	 * splitting the string. A string also can be empty (that is the different way from

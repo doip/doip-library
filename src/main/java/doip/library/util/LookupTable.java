@@ -23,7 +23,19 @@ public class LookupTable {
 	private static Logger logger = LogManager.getLogger(LookupTable.class);
 
 	LinkedList<LookupEntry> lookupEntries = new LinkedList<LookupEntry>();
+	
+	public LookupTable() {
+		 
+	}
 
+	public LookupTable(LookupTable source) {
+		List<LookupEntry> sourceEntries = source.getLookupEntries();
+		for (LookupEntry sourceEntry : sourceEntries) {
+			LookupEntry copy = new LookupEntry(sourceEntry);
+			lookupEntries.add(copy);
+		}
+	}
+	
 	/**
 	 * Loads the table from a file. ATTENTION: The purpose of this table is handle
 	 * byte arrays represented by a hex string, e.g. "01 02 AB 40". For better

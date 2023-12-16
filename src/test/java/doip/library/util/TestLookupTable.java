@@ -123,4 +123,14 @@ public class TestLookupTable {
 		logger.info("<<< public void testReference()");
 		logger.info("#############################################################################");
 	}
+	
+	@Test
+	public void testCopyConstructor() {
+		LookupTable table = new LookupTable();
+		table.addEntry(new LookupEntry("10 03 : 50 03"));
+		LookupTable copy = new LookupTable(table);
+		assertEquals(1, copy.getLookupEntries().size());
+		table.addEntry(new LookupEntry("10 03 : 50 03"));
+		assertEquals(1, copy.getLookupEntries().size());
+	}
 }
